@@ -146,15 +146,29 @@
         <div class="tarot__foot"><h3 class="tarot__name">${p.name}</h3><p class="tarot__family">${p.family}</p></div>
       </${tag}>`;
   }
-  function tarotHTML(p, i = 0) {
-    const s = defSize(p);
+  function astreHTML(p, i = 0) {
+    const s = defSize(p), multi = Object.keys(p.sizes).length > 1;
     return `
-    <article class="tarot" style="--i:${i}; --accent:${p.accent}">
-      ${tarotCard(p)}
-      <div class="tarot__buy">
-        <p class="tarot__price">${Object.keys(p.sizes).length > 1 ? '<small>dès</small>' : ''}${euro(minPrice(p))}</p>
-        <button class="btn btn--small" data-add="${p.id}" data-size="${s}">Ajouter · ${sizes[s].label}</button>
-      </div>
+    <article class="astre" data-reveal="astre" style="--i:${i % 3}; --accent:${p.accent}">
+      <a class="astre__link" href="#/produit/${p.id}" data-link aria-label="${p.name} — voir la bougie">
+        <div class="astre__arch">
+          <div class="astre__window">
+            <img src="${p.img}" alt="Bougie ${p.name}" loading="lazy">
+            <span class="astre__light" aria-hidden="true"></span>
+            <div class="astre__notes">
+              <small>Tête</small><p>${p.notes.tete}</p>
+              <small>Cœur</small><p>${p.notes.coeur}</p>
+              <small>Fond</small><p>${p.notes.fond}</p>
+            </div>
+          </div>
+          ${p.badge ? `<span class="astre__badge">${p.badge}</span>` : ''}
+        </div>
+        <span class="astre__num"><i></i><b>${p.num}</b><i></i></span>
+        <h3 class="astre__name">${p.name}</h3>
+        <p class="astre__family">${p.family}</p>
+      </a>
+      <p class="astre__price">${multi ? '<small>dès</small> ' : ''}${euro(minPrice(p))}</p>
+      <button class="astre__add" data-add="${p.id}" data-size="${s}"><span>Ajouter</span><b>+</b></button>
     </article>`;
   }
 
@@ -207,7 +221,7 @@
           <span class="eyebrow" data-reveal>La collection</span>
           <h2 data-split>Six lunes, <em>six humeurs.</em></h2>
         </div>
-        <div class="deck">${products.map(tarotHTML).join('')}</div>
+        <div class="collection">${products.map(astreHTML).join('')}</div>
       </div>
     </section>
 
@@ -260,41 +274,47 @@
   views.shop = (q) => {
     const f = FILTERS.find(x => x[0] === q.get('f')) ? q.get('f') : 'tout';
     return `
-    <section class="page"><div class="wrap section" style="padding-top:30px">
-      <div class="shop-head">
-        <div>
-          <span class="eyebrow" data-reveal>Boutique</span>
-          <h1 data-split>Le <em>jeu</em> complet</h1>
-          <p class="muted" data-reveal>Mini 80 g dès 10 € · Classique 180 g de 16 à 19 € · Livraison offerte dès 35 €</p>
+    <section class="page"><div class="wrap section shop">
+      <header class="shop-head">
+        <span class="eyebrow" data-reveal>Boutique</span>
+        <h1 data-split>La <em>collection</em></h1>
+        <span class="hairline" data-reveal></span>
+        <p class="muted" data-reveal>Mini 80 g dès 10 € · Classique 180 g · Livraison offerte dès 35 €</p>
+        <div class="seg" role="tablist" data-reveal style="--d:.2s">
+          <span class="seg__ind" aria-hidden="true"></span>
+          ${FILTERS.map(([k, l]) => `<button class="seg__btn ${k === f ? 'is-on' : ''}" data-filter="${k}" role="tab" aria-selected="${k === f}">${l}</button>`).join('')}
         </div>
-        <div style="display:grid;gap:14px;justify-items:end">
-          <div class="filters" role="tablist">${FILTERS.map(([k, l]) => `<button class="chip ${k === f ? 'is-on' : ''}" data-filter="${k}" role="tab" aria-selected="${k === f}">${l}</button>`).join('')}</div>
-          <div class="field" style="min-width:220px">
-            <select id="sort" aria-label="Trier"><option value="def">Ordre des arcanes</option><option value="asc">Prix croissant</option><option value="desc">Prix décroissant</option><option value="az">De A à Z</option></select>
-            <label for="sort">Trier par</label>
-          </div>
-        </div>
-      </div>
-      <div class="deck" id="shopGrid"></div>
+      </header>
+      <div class="collection" id="shopGrid"></div>
     </div></section>`;
   };
   views.shop.after = (q) => {
-    let f = q.get('f') || 'tout', sort = 'def';
-    const draw = () => {
-      let list = products.filter((FILTERS.find(x => x[0] === f) || FILTERS[0])[2]);
-      if (sort === 'asc') list = [...list].sort((a, b) => minPrice(a) - minPrice(b));
-      if (sort === 'desc') list = [...list].sort((a, b) => minPrice(b) - minPrice(a));
-      if (sort === 'az') list = [...list].sort((a, b) => a.name.localeCompare(b.name, 'fr'));
-      $('#shopGrid').innerHTML = list.map(tarotHTML).join('');
+    let f = FILTERS.find(x => x[0] === q.get('f')) ? q.get('f') : 'tout';
+    const grid = $('#shopGrid'), ind = $('.seg__ind');
+    const place = (instant) => {
+      const b = $('.seg__btn.is-on'); if (!b) return;
+      if (instant) ind.style.transition = 'none';
+      ind.style.width = b.offsetWidth + 'px'; ind.style.transform = `translateX(${b.offsetLeft}px)`;
+      if (instant) { void ind.offsetWidth; ind.style.transition = ''; }
     };
-    draw();
+    const draw = () => {
+      grid.innerHTML = products.filter((FILTERS.find(x => x[0] === f) || FILTERS[0])[2]).map(astreHTML).join('');
+      if (booted) FX.scan(grid);
+    };
+    draw(); place(true);
+    addEventListener('resize', () => place(true));
+    if (document.fonts) document.fonts.ready.then(() => place(true));
+    let busy = false;
     $$('[data-filter]').forEach(b => b.addEventListener('click', () => {
-      f = b.dataset.filter;
+      if (busy || b.dataset.filter === f) return;
+      f = b.dataset.filter; busy = true;
       $$('[data-filter]').forEach(x => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-selected', x === b); });
+      place(false);
       history.replaceState(null, '', '#/boutique' + (f !== 'tout' ? '?f=' + f : ''));
-      draw();
+      FX.pulse(.3, 400);
+      grid.classList.add('is-out');
+      setTimeout(() => { draw(); grid.classList.remove('is-out'); busy = false; }, FX.reduce ? 0 : 520);
     }));
-    $('#sort').addEventListener('change', e => { sort = e.target.value; draw(); });
   };
 
   /* ---------- Produit ---------- */
@@ -305,45 +325,48 @@
     const others = products.filter(x => x.id !== p.id).slice(0, 3);
     const gallery = [p.img, ...p.gallery];
     return `
-    <section class="page" style="--accent:${p.accent}"><div class="wrap section" style="padding-top:30px">
-      <p class="small muted" data-reveal style="margin-bottom:24px"><a href="#/boutique" data-link>Boutique</a> · ${p.family} · ${p.name}</p>
+    <section class="page" style="--accent:${p.accent}"><div class="wrap section pdp-page">
+      <header class="pdp-head">
+        <p class="crumbs" data-reveal><a href="#/boutique" data-link>Boutique</a><i>·</i>${p.name}</p>
+        <span class="eyebrow" data-reveal>Arcane ${p.num} · ${p.phase}</span>
+        <h1 data-split>${p.name}</h1>
+        <p class="pdp__tag" data-reveal>${p.tagline}</p>
+      </header>
       <div class="pdp">
+        <div class="pdp__side pdp__side--left">
+          <p class="pdp__desc" data-reveal="left">${p.description}</p>
+          <div class="notes">
+            ${[['Tête', p.notes.tete, .12], ['Cœur', p.notes.coeur, .3], ['Fond', p.notes.fond, .5]].map(([k, v, fr], i) => `<div class="note" data-reveal="left" style="--d:${.1 + i * .1}s"><span>${k}</span><p>${v}</p>${ART.phaseGlyph(fr, { size: 20 })}</div>`).join('')}
+          </div>
+        </div>
         <div class="pdp__visual" data-reveal="zoom">
           <div class="pdp__main">
             ${ART.astrolabe()}
-            ${archFrame(p.img, 'Bougie ' + p.name, `Arcane ${p.num} · ${p.phase}`, 'id="pdpImg"').replace('loading="lazy"', '')}
+            ${archFrame(p.img, 'Bougie ' + p.name, p.family, 'id="pdpImg"').replace('loading="lazy"', '')}
           </div>
           <div class="pdp__thumbs">${gallery.map((g, i) => `<button class="${i === 0 ? 'is-on' : ''}" data-img="${g}" aria-label="Photo ${i + 1}"><img src="${g}" alt="" loading="lazy"></button>`).join('')}</div>
         </div>
-        <div class="pdp__info">
-          <span class="eyebrow" data-reveal>${p.family} · ${p.phase}</span>
-          <h1 data-split>${p.name}</h1>
-          <p class="pdp__tag" data-reveal>${p.tagline}</p>
-          <p class="pdp__price" data-reveal><span id="pdpPrice">${euro(p.sizes[sel])}</span><small>TTC</small></p>
-          <p class="pdp__desc" data-reveal>${p.description}</p>
-          <div data-reveal>
-            <p class="eyebrow" style="margin-bottom:6px">Format</p>
-            <div class="sizes">${keys.map(k => `
-              <button class="size ${k === sel ? 'is-on' : ''}" data-size-pick="${k}">
-                <b>${sizes[k].label} · ${euro(p.sizes[k])}</b><span>${sizes[k].weight} · ${sizes[k].burn}</span>
-              </button>`).join('')}</div>
-            <div class="buy-row">
-              <div class="qty"><button id="qMinus" aria-label="Moins">−</button><output id="qVal">1</output><button id="qPlus" aria-label="Plus">+</button></div>
-              <button class="btn" id="buyBtn">Ajouter au panier</button>
-            </div>
+        <div class="pdp__side pdp__side--right">
+          <p class="pdp__price" data-reveal="right"><span id="pdpPrice">${euro(p.sizes[sel])}</span><small>TTC</small></p>
+          <div class="sizes" data-reveal="right" style="--d:.1s">${keys.map(k => `
+            <button class="size ${k === sel ? 'is-on' : ''}" data-size-pick="${k}">
+              <b>${sizes[k].label}</b><span>${sizes[k].weight} · ${sizes[k].burn} · ${euro(p.sizes[k])}</span>
+            </button>`).join('')}</div>
+          <div class="buy-row" data-reveal="right" style="--d:.2s">
+            <div class="qty"><button id="qMinus" aria-label="Moins">−</button><output id="qVal">1</output><button id="qPlus" aria-label="Plus">+</button></div>
+            <button class="btn" id="buyBtn">Ajouter</button>
           </div>
-          <div class="notes">
-            ${[['Tête', p.notes.tete, .12], ['Cœur', p.notes.coeur, .3], ['Fond', p.notes.fond, .5]].map(([k, v, f], i) => `<div class="note" data-reveal style="--d:${i * .1}s">${ART.phaseGlyph(f, { size: 22 })}<span>${k}</span><p>${v}</p></div>`).join('')}
-          </div>
-          <details class="acc"><summary>Conseils d'allumage</summary><p>Laissez brûler 2 h la première fois, jusqu'à ce que toute la surface soit fondue : c'est ce qui évite l'effet « tunnel ». Recoupez la mèche à 5 mm avant chaque allumage, ne laissez jamais une bougie sans surveillance, et éteignez-la avec un éteignoir plutôt qu'en soufflant.</p></details>
-          <details class="acc"><summary>Composition</summary><p>Cire de soja et de colza, parfum (conforme IFRA), mèche en coton tressé. Sans paraffine, sans colorant. Pot en verre réutilisable.</p></details>
-          <details class="acc"><summary>Livraison & retours</summary><p>Expédition sous 48 h, livraison offerte dès 35 €. Retours gratuits sous 14 jours pour une bougie jamais allumée. (Prototype : aucune commande réelle n'est expédiée.)</p></details>
         </div>
+      </div>
+      <div class="accs" data-reveal>
+        <details class="acc"><summary>Conseils d'allumage</summary><p>Laissez brûler 2 h la première fois, jusqu'à ce que toute la surface soit fondue : c'est ce qui évite l'effet « tunnel ». Recoupez la mèche à 5 mm avant chaque allumage, ne laissez jamais une bougie sans surveillance, et éteignez-la avec un éteignoir plutôt qu'en soufflant.</p></details>
+        <details class="acc"><summary>Composition</summary><p>Cire de soja et de colza, parfum (conforme IFRA), mèche en coton tressé. Sans paraffine, sans colorant. Pot en verre réutilisable.</p></details>
+        <details class="acc"><summary>Livraison & retours</summary><p>Expédition sous 48 h, livraison offerte dès 35 €. Retours gratuits sous 14 jours pour une bougie jamais allumée. (Prototype : aucune commande réelle n'est expédiée.)</p></details>
       </div>
     </div></section>
     <section class="section" style="padding-top:0"><div class="wrap">
-      <div class="section-head section-head--center"><span class="eyebrow" data-reveal>Sous la même lune</span><h2 data-split>Vous aimerez <em>aussi</em></h2>${ART.ornament()}</div>
-      <div class="deck">${others.map(tarotHTML).join('')}</div>
+      <div class="section-head section-head--center"><span class="eyebrow" data-reveal>Sous la même lune</span><h2 data-split>Vous aimerez <em>aussi</em></h2></div>
+      <div class="collection">${others.map(astreHTML).join('')}</div>
     </div></section>`;
   };
   views.product.after = (q, id) => {
@@ -376,11 +399,13 @@
     }
     return `
     <section class="page"><div class="wrap section" style="padding-top:30px">
+      <header class="checkout-head">
+        <span class="eyebrow" data-reveal>Commande sécurisée · simulation</span>
+        <h1 data-split>Presque <em>à vous.</em></h1>
+        <div class="steps" data-reveal><b>Panier</b><i></i><b>Informations</b><i></i><b>Paiement</b><i></i><span>Pleine lune</span></div>
+      </header>
       <div class="checkout">
         <form id="checkoutForm" novalidate>
-          <span class="eyebrow">Commande sécurisée · simulation</span>
-          <h1 data-split>Presque <em>à vous.</em></h1>
-          <div class="steps"><b>Panier</b> → <b>Informations</b> → <b>Paiement</b> → <span>Pleine lune</span></div>
 
           <fieldset class="fieldset" data-reveal>
             <legend>Vous</legend>
@@ -692,7 +717,7 @@
   /* ---------- Crédits ---------- */
   views.credits = () => `
     <section class="page"><div class="wrap section" style="padding-top:30px">
-      <div class="section-head"><span class="eyebrow" data-reveal>Merci aux photographes</span><h1 style="font-size:clamp(3rem,8vw,6rem);font-weight:300" data-split>Crédits <em>photos</em></h1>
+      <div class="section-head section-head--center"><span class="eyebrow" data-reveal>Merci aux photographes</span><h1 style="font-size:clamp(3rem,8vw,6rem);font-weight:300" data-split>Crédits <em>photos</em></h1>
       <p class="muted" data-reveal>Toutes les photographies proviennent d'Unsplash et de Pexels, sous leurs licences respectives (utilisation libre, y compris commerciale). Le logo, l'astrolabe, les cartes, la brume animée et l'univers graphique sont des créations originales SELENE.</p></div>
       <div class="credits">${credits.map((c, i) => `
         <figure class="credit" data-reveal style="--d:${(i % 4) * .08}s">

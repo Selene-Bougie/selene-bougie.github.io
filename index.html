@@ -87,32 +87,24 @@
 
   <footer class="footer">
     <div class="footer__moonline" aria-hidden="true"></div>
-    <div class="footer__grid">
-      <div>
-        <p class="footer__brand">SELENE</p>
-        <p class="muted">Bougies naturelles coulées à la main, sous le signe de la Lune.</p>
-        <p class="muted small">Prototype — aucune vraie commande n'est passée, aucun paiement n'est débité.</p>
-      </div>
-      <div>
-        <p class="footer__title">Boutique</p>
-        <a href="#/boutique" data-link>Toutes les bougies</a>
-        <a href="#/oracle" data-link>L’oracle des parfums</a>
-        <a href="#/produit/coffret-phases" data-link>Coffret cadeau</a>
-      </div>
-      <div>
-        <p class="footer__title">La maison</p>
-        <a href="#/rituel" data-link>Le rituel</a>
-        <a href="#/histoire" data-link>La légende de Séléné</a>
-        <a href="#/credits" data-link>Crédits photos</a>
-      </div>
+    <div class="footer__center">
+      <p class="footer__brand">SELENE</p>
+      <p class="muted">Bougies naturelles coulées à la main, sous le signe de la Lune.</p>
+      <nav class="footer__links">
+        <a href="#/boutique" data-link>Boutique</a><i></i>
+        <a href="#/oracle" data-link>Oracle</a><i></i>
+        <a href="#/rituel" data-link>Le rituel</a><i></i>
+        <a href="#/histoire" data-link>Séléné</a><i></i>
+        <a href="#/credits" data-link>Crédits</a>
+      </nav>
       <form class="newsletter" id="newsletter">
         <p class="footer__title">La lettre de pleine lune</p>
-        <p class="muted small">Un mail par lune. Pas plus. Promis sur Séléné.</p>
         <div class="newsletter__row">
           <input type="email" required placeholder="ton@email.fr" aria-label="Adresse e-mail">
           <button class="btn btn--small" type="submit">S'inscrire</button>
         </div>
       </form>
+      <p class="muted small">Prototype : aucune vraie commande n'est passée, aucun paiement n'est débité.</p>
     </div>
     <p class="footer__legal">© <span id="year"></span> SELENE · Cire végétale · Mèche coton · Pot réutilisable · Photos : <a href="#/credits" data-link>Unsplash &amp; Pexels</a></p>
   </footer>

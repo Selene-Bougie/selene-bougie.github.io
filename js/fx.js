@@ -210,8 +210,8 @@
         m.classList.add('is-magnet');
         m.style.transform = `translate(${dx * .16}px, ${dy * .26}px)`;
       }
-      const card = e.target.closest('.tarot__card');
-      document.querySelectorAll('.tarot__card.is-tilt').forEach(el => { if (el !== card) { el.style.removeProperty('--rx'); el.style.removeProperty('--ry'); el.classList.remove('is-tilt'); } });
+      const card = e.target.closest('.tarot__card, .astre__arch');
+      document.querySelectorAll('.is-tilt').forEach(el => { if (el !== card) { el.style.removeProperty('--rx'); el.style.removeProperty('--ry'); el.classList.remove('is-tilt'); } });
       if (card) {
         const r = card.getBoundingClientRect();
         const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
