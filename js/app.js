@@ -158,12 +158,6 @@
     </article>`;
   }
 
-  const icon = {
-    leaf: '<svg viewBox="0 0 24 24"><path d="M5 19C5 10 11 5 20 4c-1 9-6 15-15 15Zm0 0 7-7" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>',
-    wick: '<svg viewBox="0 0 24 24"><path d="M12 3c2 3 4 5 4 8a4 4 0 0 1-8 0c0-3 2-5 4-8Zm0 12v6" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>',
-    hand: '<svg viewBox="0 0 24 24"><path d="M7 11V5a1.5 1.5 0 0 1 3 0v5m0-6a1.5 1.5 0 0 1 3 0v6m0-5a1.5 1.5 0 0 1 3 0v6m0-3a1.5 1.5 0 0 1 3 0v5c0 4-3 7-7 7s-6-2-7-5l-2-4a1.5 1.5 0 0 1 2.6-1.4L7 14" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>',
-    jar: '<svg viewBox="0 0 24 24"><path d="M7 4h10v3H7zM6 7h12v11a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3Z" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M9 13c2-2 4 2 6 0" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>'
-  };
   const archFrame = (src, alt, caption = '', imgAttrs = '') => `
     <div class="arch-frame"><div class="arch"><img src="${src}" alt="${alt}" loading="lazy" ${imgAttrs}></div>${caption ? `<span class="arch-caption">${caption}</span>` : ''}</div>`;
 
@@ -173,19 +167,10 @@
   const views = {};
 
   const RITUAL = [
-    ['I', 'Cire 100 % végétale', 'Un mélange de cire de soja et de colza, fondu doucement au bain-marie. Sans paraffine ni dérivé du pétrole : elle brûle lentement, proprement, et diffuse le parfum à froid comme à chaud.', 'assets/img/r-cire.jpg', 'Cire végétale fondue dans une casserole, mèches prêtes dans les pots'],
-    ['II', 'Mèche en coton', 'Une mèche tressée en coton naturel, sans plomb ni zinc, centrée à la main dans chaque pot. Une flamme calme qui danse sans fumer. Recoupez-la à 5 mm avant chaque allumage.', 'assets/img/r-meche.jpg', 'Mains qui recoupent la mèche d’une bougie'],
-    ['III', 'Coulée à la main', 'Chaque bougie est coulée à la main, en petites séries, puis laissée au repos deux semaines pour que le parfum s’épanouisse. Comme la lune : elle prend son temps.', 'assets/img/r-coulee.jpg', 'Cire versée à la main dans des pots en verre'],
-    ['IV', 'Un pot pour la suite', 'Une fois la dernière flamme éteinte, le pot devient verre à thé, pot à crayons, mini-jardinière — ou la maison de votre prochaine bougie. Rien ne se perd.', 'assets/img/r-pot.jpg', 'Pots en verre ambré vides, prêts à être réutilisés']
-  ];
-  const GALLERY = [
-    ['assets/img/amb-bleu.jpg', 'I · Veille', 'La première flamme du soir, celle qui dit que la journée est finie.'],
-    ['assets/img/hero-flamme.jpg', 'II · Souffle', 'Une mèche en coton, une flamme qui ne fume pas.'],
-    'quote',
-    ['assets/img/amb-cocon.jpg', 'III · Cocon', 'Un plaid, des guirlandes, et l’hiver peut attendre dehors.'],
-    ['assets/img/atelier.jpg', 'IV · Atelier', 'Coulées à la main, en petites séries, comme on fait un gâteau.'],
-    ['assets/img/amb-verre.jpg', 'V · Clarté', 'Du verre, de la cire, une flamme : rien de plus, et c’est assez.'],
-    ['assets/img/fumee.jpg', 'VI · Fin', 'Et quand on l’éteint, il reste l’odeur. Et le pot.']
+    ['I', 'Cire végétale', 'Soja et colza, sans paraffine. Une flamme lente et propre.', 'assets/img/r-cire.jpg', 'Cire végétale fondue, mèches prêtes dans les pots'],
+    ['II', 'Mèche en coton', 'Tressée, sans plomb, centrée à la main dans chaque pot.', 'assets/img/r-meche.jpg', 'Mains qui ajustent la mèche d’une bougie'],
+    ['III', 'Coulée main', 'En petites séries, puis deux semaines de repos.', 'assets/img/r-coulee.jpg', 'Cire versée à la main dans des pots en verre'],
+    ['IV', 'Pot à garder', 'Verre à thé, pot à crayons… ou prochaine bougie.', 'assets/img/r-pot.jpg', 'Pots en verre ambré vides, prêts à être réutilisés']
   ];
 
   /* ---------- Accueil ---------- */
@@ -193,148 +178,89 @@
     const sig = products.filter(p => p.signature);
     return `
     <section class="hero" id="hero">
-      <div class="hero__inner">
-        <span class="eyebrow" data-reveal>Bougies naturelles · coulées à la main</span>
-        <h1 data-split>Allume <em>la nuit.</em></h1>
-        <p class="hero__lead" data-reveal style="--d:.5s">Des bougies en cire végétale nées sous le regard de Séléné, déesse de la Lune. Pour vos soirées à vous — ou pour quelqu'un qui le mérite.</p>
-        <div class="hero__cta" data-reveal style="--d:.7s">
-          <a href="#/boutique" class="btn" data-link>Découvrir la collection</a>
-          <a href="#/oracle" class="btn btn--ghost" data-link>Tirer une carte</a>
-        </div>
-        <div class="hero__badges" data-reveal style="--d:.9s"><span>100 % cire végétale</span><span>Mèche coton</span><span>Pot réutilisable</span><span>Dès 10 €</span></div>
-      </div>
-      <div class="plate" data-reveal="zoom" style="--d:.2s">
+      <div class="plate" data-reveal="zoom">
+        <div class="plate__ripple" aria-hidden="true"><i></i><i></i><i></i></div>
         ${ART.astrolabe()}
         <div class="moon" id="moon" title="Touchez la lune…">
-          <div class="moon__glow"></div><div class="moon__img"></div><div class="moon__shade"></div>
+          <div class="moon__halo"></div><div class="moon__glow"></div><div class="moon__img"></div><div class="moon__shade"></div>
         </div>
-        <div class="plate__constel">${ART.constellation([[8, 72], [26, 54], [42, 60], [58, 34], [80, 26], [66, 8]])}</div>
-        <a class="plate__arch" href="#/produit/clair-de-lune" data-link aria-label="Voir Clair de Lune">${archFrame('assets/img/p-clair-de-lune.jpg', 'Bougie Clair de Lune allumée', 'N° II · Clair de Lune')}</a>
       </div>
-      <a href="#collection" class="scroll-cue" data-scroll aria-label="Défiler"><span>Défiler</span><i></i></a>
+      <div class="hero__inner">
+        <span class="eyebrow" data-reveal style="--d:.3s">Bougies naturelles · coulées à la main</span>
+        <h1 data-split>Allume <em>la nuit.</em></h1>
+        <p class="hero__lead" data-reveal style="--d:.6s">Cire végétale, mèche en coton, lumière douce. Nées sous le regard de Séléné.</p>
+        <div class="hero__cta" data-reveal style="--d:.8s">
+          <a href="#/boutique" class="btn" data-link>La collection</a>
+          <a href="#/oracle" class="btn btn--ghost" data-link>Tirer une carte</a>
+        </div>
+      </div>
+      <a href="#collection" class="scroll-cue" data-scroll aria-label="Défiler"><i></i></a>
     </section>
-
-    <div class="marquee" aria-hidden="true"><div class="marquee__track">
-      ${Array(2).fill(['Coulées à la main', 'Sans paraffine', 'Fleur d’oranger de Marrakech', 'Thé à la menthe', 'Vanille de pleine lune', 'Pot réutilisable', 'Code PLEINELUNE : −10 %']
-        .map(t => `<span>${t}</span>`).join('')).join('')}
-    </div></div>
 
     <section class="section" id="collection">
       <div class="wrap">
         <div class="section-head section-head--center">
-          <span class="eyebrow" data-reveal>La collection · six arcanes</span>
+          <span class="eyebrow" data-reveal>La collection</span>
           <h2 data-split>Six lunes, <em>six humeurs.</em></h2>
-          ${ART.ornament()}
-          <p class="muted" data-reveal style="--d:.3s">Chaque bougie est une carte de notre jeu : une phase de lune, un parfum, une humeur. Survolez une carte pour lire ses notes.</p>
         </div>
         <div class="deck">${products.map(tarotHTML).join('')}</div>
       </div>
     </section>
 
-    <section class="gallery" id="galerie" aria-label="Galerie de nuit">
-      <div class="gallery__sticky">
-        <div class="gallery__head">
-          <div><span class="eyebrow">Galerie de nuit</span><h2>Une soirée, <em>six tableaux.</em></h2></div>
-          <p class="muted" style="max-width:340px">Faites défiler : la nuit avance de gauche à droite.</p>
-        </div>
-        <div class="gallery__track" id="galleryTrack">
-          ${GALLERY.map(g => g === 'quote'
-            ? `<blockquote class="gallery__quote">« On n'allume pas une bougie pour voir clair. On l'allume pour voir <em>doux</em>. »${ART.ornament()}</blockquote>`
-            : `<figure class="gallery__item">${archFrame(g[0], g[2]).replace('loading="lazy"', '')}<figcaption><b>${g[1]}</b>${g[2]}</figcaption></figure>`).join('')}
-        </div>
-      </div>
-    </section>
-
     <section class="section maroc" id="maroc">
-      <div class="maroc__pattern" style="background-image:${ART.zelligeTile()}"></div>
+      <div class="maroc__pattern" style="background-image:${ART.zelligeTile({ line: '#8fa2ff', a: '#1a2a7a', b: '#3a2a8a' })}"></div>
       <div class="wrap maroc__grid">
         <div class="maroc__visual" data-reveal="left">
-          <div class="zellige-arch" style="background-image:${ART.zelligeTile({ bg: '#0b1233' })}">
-            <div class="arch"><img src="assets/img/amb-pot-ambre.jpg" alt="Bougie Zahr allumée dans la nuit" data-parallax="0.06" loading="lazy"></div>
+          <div class="zellige-arch" style="background-image:${ART.zelligeTile({ line: '#8fa2ff', a: '#1a2a7a', b: '#3a2a8a', bg: '#0a1030' })}">
+            <div class="arch"><img src="assets/img/amb-pot-ambre.jpg" alt="Bougie Zahr allumée dans la nuit" data-parallax="0.05" loading="lazy"></div>
           </div>
-          <div class="maroc__small">${archFrame('assets/img/amb-the.jpg', 'Théière marocaine et verres de thé à la menthe', 'Atay')}</div>
         </div>
         <div>
           <span class="eyebrow" data-reveal>Signatures du Maroc</span>
-          <h2 style="font-size:clamp(2.4rem,6vw,4.4rem);margin:18px 0 20px" data-split>Une nuit à <em>Marrakech</em>, dans un pot.</h2>
-          <p class="muted" data-reveal>Nos deux parfums signature racontent les soirs d'été là-bas : les orangers en fleur dans les riads, et le thé qu'on sert trois fois, de très haut, pour le faire mousser.</p>
+          <h2 class="maroc__title" data-split>Une nuit à <em>Marrakech.</em></h2>
+          <p class="muted" data-reveal>Les orangers en fleur dans les riads, et le thé qu'on sert de très haut.</p>
           <div class="maroc__list">
             ${sig.map((p, i) => `
               <a class="maroc__item" href="#/produit/${p.id}" data-link data-reveal style="--d:${.15 * i}s">
                 <img src="${p.img}" alt="${p.name}" loading="lazy">
-                <div><h3>${p.name}<span class="arabic">${p.arabic}</span></h3><p>${p.family} — ${p.notes.coeur}</p></div>
+                <div><h3>${p.name}<span class="arabic">${p.arabic}</span></h3><p>${p.notes.coeur}</p></div>
                 <span class="tarot__price">${euro(minPrice(p))}</span>
               </a>`).join('')}
           </div>
-          <a class="link-arrow" href="#/boutique?f=maroc" data-link>Voir les signatures <span>→</span></a>
         </div>
       </div>
     </section>
 
-    <section class="ritual" id="rituel" aria-label="Le rituel SELENE">
-      <div class="ritual__sticky">
-        <div class="ritual__visual">
-          ${ART.astrolabe({ text: 'LE RITUEL ✦ CIRE ✦ MÈCHE ✦ COULÉE ✦ POT ✦ LE RITUEL ✦ CIRE ✦ MÈCHE ✦ COULÉE ✦ POT ✦ ' })}
-          <div class="arch-frame"><div class="arch">
-            ${RITUAL.map((s, i) => `<div class="ritual__photo ${i === 0 ? 'is-active' : ''}"><img src="${s[3]}" alt="${s[4]}" loading="lazy"></div>`).join('')}
-          </div><span class="arch-caption" id="ritualCap">Étape I / IV</span></div>
-        </div>
-        <div>
-          <span class="eyebrow">Le rituel · défilez, la lune grandit</span>
-          <div class="ritual__steps">
-            ${RITUAL.map((s, i) => `
-              <div class="ritual__step ${i === 0 ? 'is-active' : ''}">
-                <span class="num">${s[0]}</span><h3>${s[1]}</h3><p>${s[2]}</p>
-              </div>`).join('')}
-          </div>
-          <div class="moon-cycle" id="moonCycle">${Array.from({ length: 8 }, (_, i) => `<span>${moonPhaseShade((i + 1) / 16)}</span>`).join('')}</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="wrap stats">
-        ${[[100, ' %', 'Cire végétale', .5], [45, ' h', 'De douceur', .38], [0, ' g', 'De paraffine', .02], [10, ' €', 'Pour commencer', .2]].map((s, i) => `
-          <div class="stat" data-reveal style="--d:${i * .1}s">${ART.phaseGlyph(s[3], { size: 26 })}<b data-count="${s[0]}" data-suffix="${s[1]}">0</b><span>${s[2]}</span></div>`).join('')}
-      </div>
-    </section>
-
-    <section class="section" style="padding-top:0">
+    <section class="section" id="rituel">
       <div class="wrap">
         <div class="section-head section-head--center">
-          <span class="eyebrow" data-reveal>Ils ont allumé la nuit</span>
-          <h2 data-split>Mots <em>doux</em></h2>
-          ${ART.ornament()}
+          <span class="eyebrow" data-reveal>Le rituel</span>
+          <h2 data-split>Faites <em>simplement.</em></h2>
         </div>
-        <div class="reviews">
-          <div class="review" data-reveal><span class="stars">★★★★★</span><p>Atay sent vraiment le thé de ma grand-mère à Fès. J'ai failli pleurer, j'en ai racheté deux.</p><small>Yasmine, 24 ans</small></div>
-          <div class="review" data-reveal style="--d:.12s"><span class="stars">★★★★★</span><p>Offerte à ma coloc pour son anniv, elle me l'a volée… enfin, re-volée. Clair de Lune, c'est un câlin.</p><small>Hugo, 27 ans</small></div>
-          <div class="review" data-reveal style="--d:.24s"><span class="stars">★★★★★</span><p>Le pot est devenu mon verre à pinceaux de maquillage. Joli, pas cher, et ça sent bon le propre.</p><small>Inès, 21 ans</small></div>
+        <div class="rite">
+          ${RITUAL.map((s, i) => `
+            <article class="rite__item" data-reveal style="--d:${i * .12}s">
+              <div class="rite__img">${archFrame(s[3], s[4])}</div>
+              <span class="rite__num">${s[0]}</span><h3>${s[1]}</h3><p>${s[2]}</p>
+            </article>`).join('')}
         </div>
       </div>
     </section>
 
-    <section class="section" style="padding-top:0">
-      <div class="wrap">
-        <div class="gift" data-reveal="zoom">
-          <div class="gift__lanterns" id="lanterns"></div>
-          <div>
-            <span class="eyebrow">Pour offrir · arcane VI</span>
-            <h2 data-split>Le cadeau qui <em>éclaire</em> une soirée.</h2>
-            <p>Le Coffret Phases réunit trois minis dans un écrin, avec une carte à écrire à la main. 27 €, et vous passez pour quelqu'un de très attentionné.</p>
-            <a href="#/produit/coffret-phases" class="btn" data-link>Offrir le coffret</a>
-          </div>
-          <div class="gift__visual">${archFrame('assets/img/amb-trio.jpg', 'Trois bougies allumées', 'Coffret Phases · 27 €')}</div>
-        </div>
-      </div>
+    <section class="section offer">
+      <p class="whisper" data-split>« On n'allume pas une bougie pour voir clair. <em>On l'allume pour voir doux.</em> »</p>
+      <div class="offer__img" data-reveal="zoom">${archFrame('assets/img/amb-trio.jpg', 'Trois bougies allumées')}</div>
+      <span class="eyebrow" data-reveal>Pour offrir</span>
+      <h2 data-split>Le Coffret <em>Phases.</em></h2>
+      <p class="muted" data-reveal>Trois minis, une carte manuscrite. 27 €.</p>
+      <a href="#/produit/coffret-phases" class="btn" data-link data-reveal>Offrir</a>
     </section>`;
   };
   views.home.after = () => {
-    FX.lanterns($('#lanterns'), 22);
     const moon = $('#moon'); let taps = 0, tt;
     moon.addEventListener('click', e => {
       taps++; clearTimeout(tt); tt = setTimeout(() => taps = 0, 1200);
-      FX.burst(e.clientX, e.clientY, 14, ['#f3ecd6', '#d9b26a', '#ffffff']);
+      FX.burst(e.clientX, e.clientY, 14, ['#ffffff', '#c9d4ff', '#8fa6ff']);
       if (taps >= 3) {
         taps = 0; moon.classList.remove('eclipsed'); void moon.offsetWidth; moon.classList.add('eclipsed');
         FX.toast('🌑 Éclipse ! Séléné vous offre le code <b>PLEINELUNE</b> : −10 %');
@@ -428,18 +354,8 @@
               <button class="btn" id="buyBtn">Ajouter au panier</button>
             </div>
           </div>
-          <div class="perks" data-reveal>
-            <div class="perk">${icon.leaf}100 % cire végétale</div>
-            <div class="perk">${icon.wick}Mèche en coton</div>
-            <div class="perk">${icon.hand}Coulée à la main</div>
-            <div class="perk">${icon.jar}Pot réutilisable</div>
-          </div>
           <div class="notes">
             ${[['Tête', p.notes.tete, .12], ['Cœur', p.notes.coeur, .3], ['Fond', p.notes.fond, .5]].map(([k, v, f], i) => `<div class="note" data-reveal style="--d:${i * .1}s">${ART.phaseGlyph(f, { size: 22 })}<span>${k}</span><p>${v}</p></div>`).join('')}
-          </div>
-          <div class="meters">
-            ${[['Fraîcheur', p.profile.fraicheur], ['Douceur', p.profile.douceur], ['Intensité', p.profile.intensite]].map(([k, v]) => `
-              <div class="meter"><span>${k}</span><div class="meter__bar"><i data-meter="${v}"></i></div><span>${v}%</span></div>`).join('')}
           </div>
           <details class="acc"><summary>Conseils d'allumage</summary><p>Laissez brûler 2 h la première fois, jusqu'à ce que toute la surface soit fondue : c'est ce qui évite l'effet « tunnel ». Recoupez la mèche à 5 mm avant chaque allumage, ne laissez jamais une bougie sans surveillance, et éteignez-la avec un éteignoir plutôt qu'en soufflant.</p></details>
           <details class="acc"><summary>Composition</summary><p>Cire de soja et de colza, parfum (conforme IFRA), mèche en coton tressé. Sans paraffine, sans colorant. Pot en verre réutilisable.</p></details>
@@ -871,15 +787,8 @@
      Scroll : nav, phase, parallaxe, rituel, galerie
      ========================================================= */
   const nav = $('#nav'), phase = $('#phaseShadow');
-  let lastY = 0, parallaxEls = [], ritual = null, gallery = null, ticking = false;
-  const progressOf = sec => { const r = sec.getBoundingClientRect(); return Math.min(1, Math.max(0, -r.top / (sec.offsetHeight - innerHeight))); };
-  function setupScrollFx() {
-    parallaxEls = $$('[data-parallax]', app);
-    const sec = $('#rituel');
-    ritual = sec ? { sec, steps: $$('.ritual__step', sec), photos: $$('.ritual__photo', sec), moons: $$('#moonCycle span', sec), cap: $('#ritualCap'), last: -1 } : null;
-    const g = $('#galerie');
-    gallery = g ? { sec: g, track: $('#galleryTrack') } : null;
-  }
+  let lastY = 0, parallaxEls = [], ticking = false;
+  function setupScrollFx() { parallaxEls = $$('[data-parallax]', app); }
   function onScroll() {
     const y = window.scrollY, h = document.documentElement.scrollHeight - innerHeight;
     FX.setScroll(y);
@@ -890,21 +799,6 @@
     for (const el of parallaxEls) {
       const r = el.getBoundingClientRect();
       el.style.setProperty('--py', ((r.top + r.height / 2 - innerHeight / 2) * parseFloat(el.dataset.parallax)).toFixed(1) + 'px');
-    }
-    if (ritual) {
-      const rp = progressOf(ritual.sec), idx = Math.min(3, Math.floor(rp * 4));
-      if (idx !== ritual.last) {
-        ritual.last = idx;
-        ritual.steps.forEach((s, i) => s.classList.toggle('is-active', i === idx));
-        ritual.photos.forEach((s, i) => s.classList.toggle('is-active', i === idx));
-        ritual.cap.textContent = `Étape ${['I', 'II', 'III', 'IV'][idx]} / IV`;
-      }
-      ritual.moons.forEach((m, i) => m.classList.toggle('on', rp >= i / 8));
-    }
-    if (gallery) {
-      const gp = progressOf(gallery.sec);
-      const max = gallery.track.scrollWidth - innerWidth;
-      gallery.track.style.transform = `translateX(${(-gp * Math.max(0, max)).toFixed(1)}px)`;
     }
   }
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });

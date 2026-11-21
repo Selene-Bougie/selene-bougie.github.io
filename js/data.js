@@ -33,8 +33,8 @@ window.SELENE = {
       profile: { fraicheur: 20, douceur: 95, intensite: 75 },
       accent: '#ffc46b',
       sizes: { mini: 10, classique: 17 },
-      img: 'assets/img/p-clair-de-lune.jpg',
-      gallery: ['assets/img/amb-cocon.jpg', 'assets/img/pilier.jpg'],
+      img: 'assets/img/amb-cocon.jpg',
+      gallery: ['assets/img/pilier.jpg', 'assets/img/hero-flamme.jpg'],
       signature: false,
       badge: 'Best-seller'
     },
@@ -110,7 +110,6 @@ window.SELENE = {
 
   credits: [
     { file: 'p-nuit-blanche.jpg', author: 'Andrzej Gdula', site: 'Pexels', url: 'https://www.pexels.com/photo/close-up-shot-of-cosmetic-product-in-a-bottle-11188239/', profile: 'https://www.pexels.com/@andrzej-gdula-177638374/' },
-    { file: 'p-clair-de-lune.jpg', author: 'Los Muertos Crew', site: 'Pexels', url: 'https://www.pexels.com/photo/aromatic-burning-candle-with-essential-oil-in-bottle-7615878/', profile: 'https://www.pexels.com/@cristian-rojas/' },
     { file: 'p-jardin-de-minuit.jpg', author: 'Vie Studio', site: 'Pexels', url: 'https://www.pexels.com/photo/a-candle-in-a-jar-7004668/', profile: 'https://www.pexels.com/@vie-studio/' },
     { file: 'p-atay.jpg', author: 'Sasha Kim', site: 'Pexels', url: 'https://www.pexels.com/photo/amber-candle-on-adn-open-book-8484055/', profile: 'https://www.pexels.com/@sasha-kim/' },
     { file: 'lune-disque.jpg', author: 'Ayberk Karaman', site: 'Pexels', url: 'https://www.pexels.com/photo/full-moon-on-black-background-5200118/', profile: 'https://www.pexels.com/@ayberk-karaman-731958/' },

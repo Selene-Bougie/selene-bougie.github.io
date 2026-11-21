@@ -81,7 +81,7 @@
   }
 
   /* ---------- Étincelles au clic ---------- */
-  function burst(x, y, n = 10, colors = ['#ffe7a8', '#ffb547', '#f3ecd6']) {
+  function burst(x, y, n = 10, colors = ['#ffffff', '#c9d4ff', '#8fa6ff']) {
     if (reduce) return;
     for (let i = 0; i < n; i++) {
       const s = document.createElement('span');

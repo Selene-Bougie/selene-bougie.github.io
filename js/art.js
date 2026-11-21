@@ -13,7 +13,7 @@
     const term = k > 0 ? (waxing ? 0 : 1) : (waxing ? 1 : 0);
     return `M0 ${-r} A${r} ${r} 0 0 ${outer} 0 ${r} A${rx} ${r} 0 0 ${term} 0 ${-r}Z`;
   }
-  function phaseGlyph(f, { size = 22, color = '#d9b26a', cls = '' } = {}) {
+  function phaseGlyph(f, { size = 22, color = '#b9c6ff', cls = '' } = {}) {
     return `<svg class="phase-glyph ${cls}" viewBox="-12 -12 24 24" width="${size}" height="${size}" aria-hidden="true">
       <circle r="10" fill="none" stroke="${color}" stroke-width=".8" opacity=".7"/>
       ${f > .02 && f < .98 ? `<path d="${phasePath(f, 10)}" fill="${color}"/>` : ''}</svg>`;
