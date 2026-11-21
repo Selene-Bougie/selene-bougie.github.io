@@ -5,53 +5,6 @@
   const rand = (a, b) => a + Math.random() * (b - a);
   const mouse = { x: innerWidth / 2, y: innerHeight / 2, nx: 0, ny: 0 };
 
-  /* ---------- Bougie SVG ---------- */
-  let uid = 0;
-  function candleSVG(p, opts = {}) {
-    const id = 'cv' + (++uid);
-    const level = opts.level ?? 1;
-    const lit = opts.lit !== false;
-    const waxTop = 78 + (1 - level) * 70;
-    const name = opts.label === false ? '' : (p.name || '');
-    return `
-<svg class="candle-svg ${lit ? '' : 'is-off'}" viewBox="0 0 120 170" role="img" aria-label="Bougie ${name}">
-  <defs>
-    <radialGradient id="${id}g"><stop offset="0" stop-color="#ffc56b" stop-opacity=".6"/><stop offset=".35" stop-color="#ff8a3a" stop-opacity=".18"/><stop offset="1" stop-color="#ff8a3a" stop-opacity="0"/></radialGradient>
-    <linearGradient id="${id}f" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff5e24"/><stop offset=".35" stop-color="#ffb547"/><stop offset="1" stop-color="#fff3cf"/></linearGradient>
-    <linearGradient id="${id}w" x1="0" x2="1"><stop offset="0" stop-color="${p.wax}" stop-opacity=".85"/><stop offset=".45" stop-color="#ffffff"/><stop offset="1" stop-color="${p.wax}" stop-opacity=".8"/></linearGradient>
-    <linearGradient id="${id}j" x1="0" x2="1"><stop offset="0" stop-color="${p.glass}" stop-opacity=".35"/><stop offset=".5" stop-color="${p.glass}" stop-opacity=".08"/><stop offset="1" stop-color="${p.glass}" stop-opacity=".3"/></linearGradient>
-  </defs>
-  <g class="flame-wrap" transform="translate(0 ${waxTop - 78})">
-    <circle class="flame-glow" cx="60" cy="50" r="60" fill="url(#${id}g)"/>
-    <line x1="60" y1="64" x2="60" y2="79" stroke="#2a1d14" stroke-width="1.6" stroke-linecap="round"/>
-    <g class="flame">
-      <path d="M60 26 C66 39 70 49 70 57 A10 10 0 0 1 50 57 C50 49 54 39 60 26Z" fill="url(#${id}f)"/>
-      <path d="M60 42 C63 48 65 53 65 58 A5 5 0 0 1 55 58 C55 53 57 48 60 42Z" fill="#fff8e6" opacity=".95"/>
-      <ellipse cx="60" cy="64" rx="3" ry="3.5" fill="#6d8bff" opacity=".55"/>
-    </g>
-  </g>
-  <rect x="14" y="62" width="92" height="104" rx="16" fill="url(#${id}j)" stroke="${p.glass}" stroke-opacity=".55" stroke-width="1.2"/>
-  <rect class="wax-body" x="18" y="${waxTop}" width="84" height="${162 - waxTop}" rx="11" fill="url(#${id}w)"/>
-  <ellipse class="wax-top" cx="60" cy="${waxTop}" rx="42" ry="6" fill="${p.wax}"/>
-  <ellipse class="wax-light flame-glow" cx="60" cy="${waxTop}" rx="30" ry="4.5" fill="#ffb547" opacity=".45"/>
-  <ellipse class="wax-pool" cx="60" cy="${waxTop}" rx="12" ry="2.4" fill="#fff" opacity=".55"/>
-  ${opts.label === false ? '' : `
-  <rect x="29" y="110" width="62" height="36" rx="3" fill="#0b1230" stroke="${p.accent}" stroke-opacity=".6" stroke-width=".8"/>
-  <path d="M56.2 116.3 A3.6 3.6 0 1 0 59.4 121.2 A3 3 0 1 1 56.2 116.3Z" fill="#f3ecd6"/>
-  <text x="60" y="131" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="6" letter-spacing="2.2" fill="#f3ecd6">SELENE</text>
-  <text x="60" y="140.5" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="6.6" fill="${p.accent}">${name}</text>`}
-  <rect class="shine" x="21" y="70" width="5" height="88" rx="2.5" fill="#fff"/>
-  <ellipse cx="60" cy="62" rx="46" ry="6" fill="none" stroke="${p.glass}" stroke-opacity=".7" stroke-width="1.2"/>
-</svg>`;
-  }
-  function setCandleLevel(svg, level) {
-    const waxTop = 78 + (1 - level) * 70;
-    svg.querySelector('.flame-wrap').setAttribute('transform', `translate(0 ${waxTop - 78})`);
-    const body = svg.querySelector('.wax-body');
-    body.setAttribute('y', waxTop); body.setAttribute('height', Math.max(0, 162 - waxTop));
-    svg.querySelectorAll('.wax-top, .wax-light, .wax-pool').forEach(e => e.setAttribute('cy', waxTop));
-  }
-
   /* ---------- Ciel étoilé ---------- */
   const sky = document.getElementById('sky');
   const ctx = sky.getContext('2d');
@@ -123,7 +76,7 @@
   if (fine) {
     loopCursor();
     document.addEventListener('pointerover', e => {
-      cursor.classList.toggle('is-hover', !!e.target.closest('a, button, .card, label, select, summary, input, .hero__moon'));
+      cursor.classList.toggle('is-hover', !!e.target.closest('a, button, .tarot__card, label, select, summary, input, .moon'));
     });
   }
 
@@ -157,8 +110,8 @@
         m.classList.add('is-magnet');
         m.style.transform = `translate(${dx * .18}px, ${dy * .3}px)`;
       }
-      const card = e.target.closest('.card');
-      document.querySelectorAll('.card.is-tilt').forEach(el => { if (el !== card) { el.style.removeProperty('--rx'); el.style.removeProperty('--ry'); el.classList.remove('is-tilt'); } });
+      const card = e.target.closest('.tarot__card');
+      document.querySelectorAll('.tarot__card.is-tilt').forEach(el => { if (el !== card) { el.style.removeProperty('--rx'); el.style.removeProperty('--ry'); el.classList.remove('is-tilt'); } });
       if (card) {
         const r = card.getBoundingClientRect();
         const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
@@ -315,13 +268,5 @@
     clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('is-on'), 3200);
   }
 
-  /* ---------- Motifs marocains ---------- */
-  const khatamSVG = (stroke = '#d9b26a') => `
-<svg viewBox="0 0 100 100" aria-hidden="true" class="khatam"><g fill="none" stroke="${stroke}" stroke-width=".8">
-  <rect x="20" y="20" width="60" height="60"/><rect x="20" y="20" width="60" height="60" transform="rotate(45 50 50)"/>
-  <circle cx="50" cy="50" r="12"/><circle cx="50" cy="50" r="44" stroke-dasharray="2 4"/>
-  <rect x="32" y="32" width="36" height="36" transform="rotate(22.5 50 50)"/><rect x="32" y="32" width="36" height="36" transform="rotate(67.5 50 50)"/></g></svg>`;
-  const zelligeBg = `url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><g fill="none" stroke="#d9b26a" stroke-width=".7"><path d="M30 4 L37 23 L56 30 L37 37 L30 56 L23 37 L4 30 L23 23 Z"/><rect x="18" y="18" width="24" height="24" transform="rotate(45 30 30)"/><circle cx="30" cy="30" r="5"/><path d="M0 0 L8 8 M60 0 L52 8 M0 60 L8 52 M60 60 L52 52"/></g></svg>')}")`;
-
-  window.FX = { candleSVG, setCandleLevel, scan, split, burst, flyToCart, smoke, fireflies, lanterns, eclipse, toast, khatamSVG, zelligeBg, mouse, reduce, fine, setScroll: y => { scrollY = y; } };
+  window.FX = { scan, split, burst, flyToCart, smoke, fireflies, lanterns, eclipse, toast, mouse, reduce, fine, setScroll: y => { scrollY = y; } };
 })();
