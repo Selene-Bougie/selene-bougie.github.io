@@ -79,23 +79,6 @@
     <path d="M2 38 V12 A10 10 0 0 1 12 2 H38"/><path d="M7 38 V15 A8 8 0 0 1 15 7 H38" opacity=".5"/>
     <path fill="currentColor" stroke="none" transform="translate(12 12) scale(.45)" d="M0-10 C1-3 3-1 10 0 C3 1 1 3 0 10 C-1 3 -3 1 -10 0 C-3-1 -1-3 0-10Z"/></svg>`;
 
-  /* Zellige : tuile à étoile à huit branches */
-  function zelligeTile({ line = '#d9b26a', a = '#1b6f6a', b = '#b5553a', bg = 'none', op = 1 } = {}) {
-    const s = 22;
-    const star = `<rect x="${50 - s}" y="${50 - s}" width="${2 * s}" height="${2 * s}"/><rect x="${50 - s}" y="${50 - s}" width="${2 * s}" height="${2 * s}" transform="rotate(45 50 50)"/>`;
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="${op}">
-      <rect width="100" height="100" fill="${bg}"/>
-      <g fill="${a}" fill-opacity=".55" stroke="${line}" stroke-width="1">${star}</g>
-      <circle cx="50" cy="50" r="8" fill="${b}" fill-opacity=".8" stroke="${line}" stroke-width=".8"/>
-      <g fill="${b}" fill-opacity=".5" stroke="${line}" stroke-width="1">
-        <path d="M0 -14 L6 -6 L14 0 L6 6 L0 14 L-6 6 L-14 0 L-6 -6Z" transform="translate(0 0)"/>
-        <path d="M0 -14 L6 -6 L14 0 L6 6 L0 14 L-6 6 L-14 0 L-6 -6Z" transform="translate(100 0)"/>
-        <path d="M0 -14 L6 -6 L14 0 L6 6 L0 14 L-6 6 L-14 0 L-6 -6Z" transform="translate(0 100)"/>
-        <path d="M0 -14 L6 -6 L14 0 L6 6 L0 14 L-6 6 L-14 0 L-6 -6Z" transform="translate(100 100)"/></g>
-      <g stroke="${line}" stroke-width="1" fill="none">
-        <path d="M14 0 L28 22 M86 0 L72 22 M14 100 L28 78 M86 100 L72 78 M0 14 L22 28 M100 14 L78 28 M0 86 L22 72 M100 86 L78 72"/></g></svg>`;
-    return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-  }
 
   /* Constellation décorative (étoiles reliées) */
   function constellation(points, cls = '') {
@@ -113,5 +96,5 @@
     </div>`;
   }
 
-  window.ART = { phaseGlyph, phasePath, sparkle, astrolabe, ornament, corner, zelligeTile, constellation, cardBack };
+  window.ART = { phaseGlyph, phasePath, sparkle, astrolabe, ornament, corner, constellation, cardBack };
 })();

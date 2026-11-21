@@ -50,8 +50,8 @@
   };
 
   const drawer = $('#drawer');
-  function openCart() { renderCart(); drawer.classList.add('is-open'); drawer.setAttribute('aria-hidden', 'false'); document.body.classList.add('no-scroll'); }
-  function closeCart() { drawer.classList.remove('is-open'); drawer.setAttribute('aria-hidden', 'true'); document.body.classList.remove('no-scroll'); }
+  function openCart() { renderCart(); drawer.classList.add('is-open'); drawer.setAttribute('aria-hidden', 'false'); document.body.classList.add('no-scroll'); FX.lockScroll(true); }
+  function closeCart() { drawer.classList.remove('is-open'); drawer.setAttribute('aria-hidden', 'true'); document.body.classList.remove('no-scroll'); FX.lockScroll(false); }
   $('#cartBtn').addEventListener('click', openCart);
   drawer.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeCart(); });
   addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
@@ -143,7 +143,7 @@
           </div>
           ${p.badge ? `<span class="tarot__badge">${p.badge}</span>` : ''}
         </div>
-        <div class="tarot__foot"><h3 class="tarot__name">${p.name}</h3><p class="tarot__family">${p.family}${p.arabic ? ` · <span class="arabic" style="font-size:1.05rem;margin:0">${p.arabic}</span>` : ''}</p></div>
+        <div class="tarot__foot"><h3 class="tarot__name">${p.name}</h3><p class="tarot__family">${p.family}</p></div>
       </${tag}>`;
   }
   function tarotHTML(p, i = 0) {
@@ -174,27 +174,31 @@
   ];
 
   /* ---------- Accueil ---------- */
-  views.home = () => {
-    const sig = products.filter(p => p.signature);
-    return `
+  views.home = () => `
     <section class="hero" id="hero">
-      <div class="plate" data-reveal="zoom">
-        <div class="plate__ripple" aria-hidden="true"><i></i><i></i><i></i></div>
-        ${ART.astrolabe()}
-        <div class="moon" id="moon" title="Touchez la lune…">
-          <div class="moon__halo"></div><div class="moon__glow"></div><div class="moon__img"></div><div class="moon__shade"></div>
+      <div class="hero__visual" id="heroVisual">
+        <div class="plate" data-reveal="zoom">
+          <div class="plate__ripple" aria-hidden="true"><i></i><i></i><i></i></div>
+          ${ART.astrolabe()}
+          <div class="moon" id="moon" title="Touchez la lune…">
+            <div class="moon__halo"></div><div class="moon__glow"></div><div class="moon__img"></div><div class="moon__shade"></div>
+          </div>
         </div>
       </div>
-      <div class="hero__inner">
-        <span class="eyebrow" data-reveal style="--d:.3s">Bougies naturelles · coulées à la main</span>
-        <h1 data-split>Allume <em>la nuit.</em></h1>
-        <p class="hero__lead" data-reveal style="--d:.6s">Cire végétale, mèche en coton, lumière douce. Nées sous le regard de Séléné.</p>
-        <div class="hero__cta" data-reveal style="--d:.8s">
+      <div class="hero__inner" id="heroText">
+        <span class="eyebrow" data-reveal style="--d:.5s">Bougies naturelles · coulées à la main</span>
+        <h1 data-split style="--d:.2s">Allume <em>la nuit.</em></h1>
+        <p class="hero__lead" data-reveal style="--d:.9s">Cire végétale, mèche en coton, lumière douce. Nées sous le regard de Séléné.</p>
+        <div class="hero__cta" data-reveal style="--d:1.1s">
           <a href="#/boutique" class="btn" data-link>La collection</a>
           <a href="#/oracle" class="btn btn--ghost" data-link>Tirer une carte</a>
         </div>
       </div>
-      <a href="#collection" class="scroll-cue" data-scroll aria-label="Défiler"><i></i></a>
+      <a href="#manifeste" class="scroll-cue" data-scroll aria-label="Défiler"><i></i></a>
+    </section>
+
+    <section class="section manifesto" id="manifeste">
+      <p class="scrub" data-scrub>Une flamme. Une lune. Et ce silence bleu qui n'appartient qu'à la nuit. Chaque bougie est coulée à la main, dans une cire végétale, pour éclairer doucement ce qui compte.</p>
     </section>
 
     <section class="section" id="collection">
@@ -204,30 +208,6 @@
           <h2 data-split>Six lunes, <em>six humeurs.</em></h2>
         </div>
         <div class="deck">${products.map(tarotHTML).join('')}</div>
-      </div>
-    </section>
-
-    <section class="section maroc" id="maroc">
-      <div class="maroc__pattern" style="background-image:${ART.zelligeTile({ line: '#8fa2ff', a: '#1a2a7a', b: '#3a2a8a' })}"></div>
-      <div class="wrap maroc__grid">
-        <div class="maroc__visual" data-reveal="left">
-          <div class="zellige-arch" style="background-image:${ART.zelligeTile({ line: '#8fa2ff', a: '#1a2a7a', b: '#3a2a8a', bg: '#0a1030' })}">
-            <div class="arch"><img src="assets/img/amb-pot-ambre.jpg" alt="Bougie Zahr allumée dans la nuit" data-parallax="0.05" loading="lazy"></div>
-          </div>
-        </div>
-        <div>
-          <span class="eyebrow" data-reveal>Signatures du Maroc</span>
-          <h2 class="maroc__title" data-split>Une nuit à <em>Marrakech.</em></h2>
-          <p class="muted" data-reveal>Les orangers en fleur dans les riads, et le thé qu'on sert de très haut.</p>
-          <div class="maroc__list">
-            ${sig.map((p, i) => `
-              <a class="maroc__item" href="#/produit/${p.id}" data-link data-reveal style="--d:${.15 * i}s">
-                <img src="${p.img}" alt="${p.name}" loading="lazy">
-                <div><h3>${p.name}<span class="arabic">${p.arabic}</span></h3><p>${p.notes.coeur}</p></div>
-                <span class="tarot__price">${euro(minPrice(p))}</span>
-              </a>`).join('')}
-          </div>
-        </div>
       </div>
     </section>
 
@@ -248,14 +228,13 @@
     </section>
 
     <section class="section offer">
-      <p class="whisper" data-split>« On n'allume pas une bougie pour voir clair. <em>On l'allume pour voir doux.</em> »</p>
       <div class="offer__img" data-reveal="zoom">${archFrame('assets/img/amb-trio.jpg', 'Trois bougies allumées')}</div>
       <span class="eyebrow" data-reveal>Pour offrir</span>
       <h2 data-split>Le Coffret <em>Phases.</em></h2>
       <p class="muted" data-reveal>Trois minis, une carte manuscrite. 27 €.</p>
       <a href="#/produit/coffret-phases" class="btn" data-link data-reveal>Offrir</a>
     </section>`;
-  };
+
   views.home.after = () => {
     const moon = $('#moon'); let taps = 0, tt;
     moon.addEventListener('click', e => {
@@ -275,9 +254,8 @@
   /* ---------- Boutique ---------- */
   const FILTERS = [
     ['tout', 'Tout', () => true],
-    ['classiques', 'Les classiques', p => !p.signature && p.id !== 'coffret-phases'],
-    ['maroc', 'Signatures Maroc', p => p.signature],
-    ['cadeaux', 'Coffrets', p => p.id === 'coffret-phases']
+    ['bougies', 'Bougies', p => p.id !== 'coffret-phases'],
+    ['cadeaux', 'Coffret', p => p.id === 'coffret-phases']
   ];
   views.shop = (q) => {
     const f = FILTERS.find(x => x[0] === q.get('f')) ? q.get('f') : 'tout';
@@ -338,7 +316,7 @@
           <div class="pdp__thumbs">${gallery.map((g, i) => `<button class="${i === 0 ? 'is-on' : ''}" data-img="${g}" aria-label="Photo ${i + 1}"><img src="${g}" alt="" loading="lazy"></button>`).join('')}</div>
         </div>
         <div class="pdp__info">
-          <span class="eyebrow" data-reveal>${p.signature ? 'Signature Maroc · ' + p.family : p.family + ' · ' + p.phase}</span>
+          <span class="eyebrow" data-reveal>${p.family} · ${p.phase}</span>
           <h1 data-split>${p.name}</h1>
           <p class="pdp__tag" data-reveal>${p.tagline}</p>
           <p class="pdp__price" data-reveal><span id="pdpPrice">${euro(p.sizes[sel])}</span><small>TTC</small></p>
@@ -419,7 +397,7 @@
               ${field('address', 'Adresse', 'text', 'street-address', 'full')}
               ${field('zip', 'Code postal', 'text', 'postal-code')}
               ${field('city', 'Ville', 'text', 'address-level2')}
-              <div class="field full"><select id="country" name="country" autocomplete="country-name"><option>France</option><option>Belgique</option><option>Suisse</option><option>Luxembourg</option><option>Maroc</option></select><label for="country">Pays</label></div>
+              <div class="field full"><select id="country" name="country" autocomplete="country-name"><option>France</option><option>Belgique</option><option>Suisse</option><option>Luxembourg</option></select><label for="country">Pays</label></div>
             </div>
             <div class="ship-opts" style="margin-top:18px">
               <label class="ship-opt"><input type="radio" name="ship" value="standard" checked><div><b>Colissimo</b><small>3 à 4 jours ouvrés · offerte dès 35 €</small></div><span id="shipStd"></span></label>
@@ -604,19 +582,19 @@
   const QUIZ = [
     { q: 'Ta nuit idéale ?', a: [
       ['Plaid, série & chocolat chaud', 'Le cocon absolu', { 'clair-de-lune': 2 }],
-      ['Une terrasse étoilée à Marrakech', 'Les orangers, la chaleur', { zahr: 2, atay: 1 }],
-      ['Des draps frais et 10 h de sommeil', 'Le luxe, le vrai', { 'nuit-blanche': 2 }],
+      ['Une fenêtre ouverte sur un soir de printemps', 'Les fleurs blanches, l’air tiède', { neroli: 2, 'jardin-de-minuit': 1 }],
+      ['Des draps frais et dix heures de sommeil', 'Le luxe, le vrai', { 'nuit-blanche': 2 }],
       ['Un dîner aux chandelles', 'Romantique, mais pas sage', { 'jardin-de-minuit': 2 }]] },
     { q: 'Choisis une lumière.', a: [
       ['La pleine lune', 'Ronde, dorée, rassurante', { 'clair-de-lune': 2 }],
       ['Le premier croissant', 'Fin, frais, plein de promesses', { 'nuit-blanche': 2 }],
-      ['Un coucher de soleil ocre', 'Sur les remparts', { zahr: 2 }],
-      ['Les lanternes d’une médina', 'Ciselées, vivantes', { atay: 2, 'jardin-de-minuit': 1 }]] },
+      ['L’heure bleue', 'Juste après le coucher du soleil', { neroli: 2 }],
+      ['La brume sur un lac', 'Fraîche et silencieuse', { brume: 2, 'nuit-blanche': 1 }]] },
     { q: 'Et dans ta tasse, ce soir ?', a: [
-      ['Thé à la menthe, bien sucré', 'Servi de très haut', { atay: 3 }],
+      ['Un thé vert à la menthe', 'Frais, pour y voir clair', { brume: 3 }],
       ['Une infusion, puis au lit', 'Sage comme une image', { 'nuit-blanche': 2 }],
       ['Un verre de rosé', 'Entre amis, sous les fleurs', { 'jardin-de-minuit': 2 }],
-      ['Un lait chaud à la fleur d’oranger', 'Comme chez mamie', { zahr: 2, 'clair-de-lune': 1 }]] }
+      ['Un lait chaud à la fleur d’oranger', 'Comme chez mamie', { neroli: 2, 'clair-de-lune': 1 }]] }
   ];
   views.oracle = () => `
     <section class="page oracle"><div class="wrap oracle__card">
@@ -690,12 +668,12 @@
         </div>
       </article>
       <article class="chapter">
-        <div class="chapter__img" data-reveal="right">${archFrame('assets/img/amb-the-tapis.jpg', 'Thé à la menthe et théière marocaine', 'Chapitre II', 'data-parallax="0.08"')}</div>
+        <div class="chapter__img" data-reveal="right">${archFrame('assets/img/amb-bleu.jpg', 'Bougies allumées dans la pénombre bleue', 'Chapitre II', 'data-parallax="0.08"')}</div>
         <div>
           <span class="eyebrow" data-reveal>Chapitre II</span>
-          <h2 data-split>De Fès <em>à votre table de nuit</em></h2>
-          <p data-reveal>SELENE est née d'un souvenir : les soirées d'été au Maroc, quand l'air sent la fleur d'oranger et que le thé à la menthe passe de main en main jusqu'à tard.</p>
-          <p data-reveal>On a voulu mettre ces nuits-là dans un pot. À côté, il fallait aussi les parfums qu'on aime tous : le linge propre, la vanille, les fleurs. Les classiques, mais faits bien.</p>
+          <h2 data-split>L’heure <em>bleue</em></h2>
+          <p data-reveal>Il y a un moment, juste après le coucher du soleil, où le ciel devient d'un bleu profond et où tout ralentit. C'est l'heure que Séléné préfère : celle où l'on allume la première bougie.</p>
+          <p data-reveal>Nos parfums sont pensés pour cet instant-là : le linge propre, la vanille, les fleurs de nuit, le néroli, la menthe fraîche. Des classiques, mais faits bien.</p>
         </div>
       </article>
       <article class="chapter">
@@ -715,7 +693,7 @@
   views.credits = () => `
     <section class="page"><div class="wrap section" style="padding-top:30px">
       <div class="section-head"><span class="eyebrow" data-reveal>Merci aux photographes</span><h1 style="font-size:clamp(3rem,8vw,6rem);font-weight:300" data-split>Crédits <em>photos</em></h1>
-      <p class="muted" data-reveal>Toutes les photographies proviennent d'Unsplash et de Pexels, sous leurs licences respectives (utilisation libre, y compris commerciale). Le logo, l'astrolabe, les cartes, les motifs zellige et l'univers graphique sont des créations originales SELENE.</p></div>
+      <p class="muted" data-reveal>Toutes les photographies proviennent d'Unsplash et de Pexels, sous leurs licences respectives (utilisation libre, y compris commerciale). Le logo, l'astrolabe, les cartes, la brume animée et l'univers graphique sont des créations originales SELENE.</p></div>
       <div class="credits">${credits.map((c, i) => `
         <figure class="credit" data-reveal style="--d:${(i % 4) * .08}s">
           <img src="assets/img/${c.file}" alt="Photo de ${c.author}" loading="lazy">
@@ -751,14 +729,14 @@
     }
     app.innerHTML = views[view](q, arg);
     app.dataset.view = view;
-    window.scrollTo(0, 0);
+    FX.scrollTo(0, { immediate: true });
     views[view].after && views[view].after(q, arg);
     if (booted) FX.scan(app);
     setupScrollFx();
     const titles = { home: 'Bougies naturelles coulées à la main', shop: 'Boutique', checkout: 'Commande', thanks: 'Merci', oracle: "L'oracle", story: 'La légende de Séléné', credits: 'Crédits photos', notfound: 'Page introuvable' };
     document.title = 'SELENE — ' + (view === 'product' && byId(arg) ? byId(arg).name : titles[view]);
     $$('.nav__links a').forEach(a => a.classList.toggle('is-active', !!parts[0] && a.getAttribute('href') === '#/' + parts[0]));
-    if (anchor) setTimeout(() => { const el = document.getElementById(anchor); if (el) window.scrollTo({ top: el.offsetTop, behavior: 'smooth' }); }, 120);
+    if (anchor) setTimeout(() => { const el = document.getElementById(anchor); if (el) FX.scrollTo(el, { offset: -20 }); }, 200);
     onScroll();
   }
   function go(hash, x = innerWidth / 2, y = innerHeight / 2) {
@@ -772,7 +750,7 @@
     const href = a.getAttribute('href');
     if (a.hasAttribute('data-scroll') || !href.startsWith('#/')) {
       const el = document.getElementById(href.slice(1));
-      if (el) { e.preventDefault(); window.scrollTo({ top: el.offsetTop - 60, behavior: 'smooth' }); }
+      if (el) { e.preventDefault(); FX.scrollTo(el, { offset: -60 }); }
       return;
     }
     e.preventDefault();
@@ -787,8 +765,8 @@
      Scroll : nav, phase, parallaxe, rituel, galerie
      ========================================================= */
   const nav = $('#nav'), phase = $('#phaseShadow');
-  let lastY = 0, parallaxEls = [], ticking = false;
-  function setupScrollFx() { parallaxEls = $$('[data-parallax]', app); }
+  let lastY = 0, parallaxEls = [], ticking = false, heroV = null, heroT = null;
+  function setupScrollFx() { parallaxEls = $$('[data-parallax]', app); heroV = $('#heroVisual'); heroT = $('#heroText'); }
   function onScroll() {
     const y = window.scrollY, h = document.documentElement.scrollHeight - innerHeight;
     FX.setScroll(y);
@@ -796,6 +774,14 @@
     nav.classList.toggle('is-hidden', y > lastY && y > 400 && !links.classList.contains('is-open'));
     lastY = y;
     phase.setAttribute('cx', (23 + (h > 0 ? Math.min(1, y / h) : 1) * 24).toFixed(2));
+    if (heroV) {
+      const p = Math.min(1, y / innerHeight);
+      heroV.style.transform = `translate3d(0, ${(y * .35).toFixed(1)}px, 0) scale(${(1 - p * .08).toFixed(3)})`;
+      heroV.style.opacity = (1 - p * .9).toFixed(3);
+      heroV.style.filter = p > .01 ? `blur(${(p * 6).toFixed(2)}px)` : '';
+      heroT.style.transform = `translate3d(0, ${(y * .18).toFixed(1)}px, 0)`;
+      heroT.style.opacity = (1 - p * 1.3).toFixed(3);
+    }
     for (const el of parallaxEls) {
       const r = el.getBoundingClientRect();
       el.style.setProperty('--py', ((r.top + r.height / 2 - innerHeight / 2) * parseFloat(el.dataset.parallax)).toFixed(1) + 'px');
@@ -815,10 +801,17 @@
   $('#year').textContent = new Date().getFullYear();
 
   /* ---------- Démarrage ---------- */
-  $('#loaderStage').insertAdjacentHTML('afterbegin', ART.astrolabe());
   renderCart();
   route();
   const loader = $('#loader');
-  const hide = () => { loader.classList.add('is-done'); booted = true; setTimeout(() => FX.scan(app), 250); setTimeout(() => loader.remove(), 1300); };
-  if (FX.reduce) hide(); else setTimeout(hide, 2900);
+  let hidden = false;
+  const hide = () => {
+    if (hidden) return; hidden = true;
+    loader.classList.add('is-done');
+    document.body.classList.remove('is-loading');
+    booted = true; FX.scan(app); FX.pulse(.25, 900);
+    setTimeout(() => loader.remove(), 1400);
+  };
+  loader.addEventListener('click', hide);
+  if (FX.reduce) hide(); else setTimeout(hide, 3300);
 })();

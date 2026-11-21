@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SELENE — Bougies naturelles coulées à la main</title>
-  <meta name="description" content="SELENE, bougies 100 % cire végétale coulées à la main sous le signe de la Lune. Floral, linge frais, vanille et signatures du Maroc : fleur d'oranger, thé à la menthe.">
+  <meta name="description" content="SELENE, bougies 100 % cire végétale coulées à la main sous le signe de la Lune. Linge frais, vanille, fleurs de nuit, néroli et brume de menthe.">
   <meta name="theme-color" content="#03050f">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,8 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="is-loading">
   <!-- Ciel étoilé -->
+  <canvas id="mist" aria-hidden="true"></canvas>
   <canvas id="sky" aria-hidden="true"></canvas>
   <div class="aura" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="grain" aria-hidden="true"></div>
@@ -23,14 +24,9 @@
 
   <!-- Intro -->
   <div class="loader" id="loader" aria-hidden="true">
-    <div class="loader__stage" id="loaderStage">
-      <svg class="loader__logo" viewBox="0 0 64 64">
-      <path class="loader__crescent" d="M33.22 10.04 A24 24 0 1 0 53.72 44.2 A20 20 0 1 1 33.22 10.04 Z"/>
-      <path class="loader__flame" d="M45 16 C49 23 51 28 51 33 A6 6 0 0 1 39 33 C39 28 41 23 45 16Z"/>
-    </svg>
-    </div>
-    <p class="loader__word">SELENE</p>
-    <p class="loader__hint">on allume la nuit…</p>
+    <p class="loader__word"><span style="--i:0">S</span><span style="--i:1">E</span><span style="--i:2">L</span><span style="--i:3">E</span><span style="--i:4">N</span><span style="--i:5">E</span></p>
+    <span class="loader__light"></span>
+    <p class="loader__hint">Bougies de nuit · coulées à la main</p>
   </div>
 
   <!-- Transition de page -->
@@ -82,7 +78,7 @@
         <h2>Votre panier</h2>
         <button class="icon-btn" data-close aria-label="Fermer le panier">✕</button>
       </div>
-      <div class="drawer__body" id="drawerBody"></div>
+      <div class="drawer__body" id="drawerBody" data-lenis-prevent></div>
       <div class="drawer__foot" id="drawerFoot"></div>
     </div>
   </aside>
@@ -100,7 +96,7 @@
       <div>
         <p class="footer__title">Boutique</p>
         <a href="#/boutique" data-link>Toutes les bougies</a>
-        <a href="#/produit/zahr" data-link>Signatures du Maroc</a>
+        <a href="#/oracle" data-link>L’oracle des parfums</a>
         <a href="#/produit/coffret-phases" data-link>Coffret cadeau</a>
       </div>
       <div>
@@ -121,6 +117,7 @@
     <p class="footer__legal">© <span id="year"></span> SELENE · Cire végétale · Mèche coton · Pot réutilisable · Photos : <a href="#/credits" data-link>Unsplash &amp; Pexels</a></p>
   </footer>
 
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
   <script src="js/data.js"></script>
   <script src="js/art.js"></script>
   <script src="js/fx.js"></script>
