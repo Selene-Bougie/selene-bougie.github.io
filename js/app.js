@@ -180,12 +180,35 @@
      ========================================================= */
   const views = {};
 
-  const RITUAL = [
-    ['I', 'Cire végétale', 'Soja et colza, sans paraffine. Une flamme lente et propre.', 'assets/img/r-cire.jpg', 'Cire végétale fondue, mèches prêtes dans les pots'],
-    ['II', 'Mèche en coton', 'Tressée, sans plomb, centrée à la main dans chaque pot.', 'assets/img/r-meche.jpg', 'Mains qui ajustent la mèche d’une bougie'],
-    ['III', 'Coulée main', 'En petites séries, puis deux semaines de repos.', 'assets/img/r-coulee.jpg', 'Cire versée à la main dans des pots en verre'],
-    ['IV', 'Pot à garder', 'Verre à thé, pot à crayons… ou prochaine bougie.', 'assets/img/r-pot.jpg', 'Pots en verre ambré vides, prêts à être réutilisés']
+  /* Les quatre serments : la bougie, de la plante au pot */
+  const PLEDGE = [
+    ['I', 'Née des plantes', 'Une cire de soja et de colza, jamais de paraffine — ce dérivé du pétrole qui noircit les murs. Notre flamme brûle lentement, proprement.', 'assets/img/r-cire.jpg', 'Cire végétale fondue, mèches prêtes dans les pots'],
+    ['II', 'Une mèche honnête', 'Du coton tressé, sans plomb ni âme métallique, centré à la main dans chaque pot. Rien d’autre ne part en fumée.', 'assets/img/r-meche.jpg', 'Mains qui ajustent la mèche d’une bougie'],
+    ['III', 'Zéro plastique', 'Un colis en carton, un calage en papier, un ruban de papier. Rien qui ne finisse un jour dans l’océan.', 'assets/img/r-coulee.jpg', 'Cire versée à la main dans des pots en verre'],
+    ['IV', 'Le pot revit', 'Un verre épais pensé pour durer : verre à thé, pot à crayons, petit vase… ou écrin de votre prochaine bougie.', 'assets/img/r-pot.jpg', 'Pots en verre ambré vides, prêts à être réutilisés']
   ];
+  const STATS = [
+    [0, '%', 'de paraffine'],
+    [100, '%', 'cire végétale'],
+    [45, 'h', 'de lumière douce'],
+    [0, 'g', 'de plastique au colis']
+  ];
+  const WORDS = ['Cire végétale', 'Mèche en coton', 'Sans paraffine', 'Verre réutilisable', 'Coulée à la main', 'Zéro plastique'];
+  const marquee = (dir) => `<div class="drift__row" data-drift="${dir}"><div class="drift__track">${[0, 1].map(() => `<span>${WORDS.map(w => `<b>${w}</b><i>✦</i>`).join('')}</span>`).join('')}</div></div>`;
+
+  /* Sceau du projet étudiant : texte circulaire autour d'une pousse sous la lune */
+  const campusSeal = () => `
+    <svg class="seal" viewBox="-120 -120 240 240" aria-hidden="true">
+      <defs><path id="sealPath" d="M-92 0 A92 92 0 1 1 92 0 A92 92 0 1 1 -92 0"/></defs>
+      <g class="seal__ring"><text><textPath href="#sealPath" textLength="575" lengthAdjust="spacing">UNIVERSITÉ DE HAUTE-ALSACE ✦ PROJET ÉTUDIANT ✦ SELENE ✦ </textPath></text></g>
+      <circle r="108" fill="none" stroke="currentColor" stroke-width=".6" opacity=".5"/>
+      <circle r="76" fill="none" stroke="currentColor" stroke-width=".6" opacity=".35" stroke-dasharray="1 4"/>
+      <g class="seal__core">
+        <path d="M-6 -34 A26 26 0 1 0 22 -12 A21 21 0 1 1 -6 -34Z" fill="currentColor" opacity=".9"/>
+        <path d="M0 40 C0 22 0 12 0 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <path d="M0 18 C-14 16 -20 6 -20 -2 C-8 -2 0 6 0 18Z M0 12 C12 10 18 2 18 -6 C8 -6 0 0 0 12Z" fill="currentColor" opacity=".75"/>
+      </g>
+    </svg>`;
 
   /* ---------- Accueil ---------- */
   views.home = () => `
@@ -193,26 +216,62 @@
       <div class="hero__visual" id="heroVisual">
         <div class="plate" data-reveal="zoom">
           <div class="plate__ripple" aria-hidden="true"><i></i><i></i><i></i></div>
-          ${ART.astrolabe()}
+          ${ART.astrolabe({ text: 'SELENE ✦ CIRE VÉGÉTALE ✦ SANS PARAFFINE ✦ MÈCHE EN COTON ✦ ZÉRO PLASTIQUE ✦ POT RÉUTILISABLE ✦ ' })}
           <div class="moon" id="moon" title="Touchez la lune…">
             <div class="moon__halo"></div><div class="moon__glow"></div><div class="moon__img"></div><div class="moon__shade"></div>
           </div>
         </div>
       </div>
       <div class="hero__inner" id="heroText">
-        <span class="eyebrow" data-reveal style="--d:.5s">Bougies naturelles · coulées à la main</span>
-        <h1 data-split style="--d:.2s">Allume <em>la nuit.</em></h1>
-        <p class="hero__lead" data-reveal style="--d:.9s">Cire végétale, mèche en coton, lumière douce. Nées sous le regard de Séléné.</p>
+        <span class="eyebrow" data-reveal style="--d:.5s">Bougies végétales · coulées à la main</span>
+        <h1 data-split style="--d:.2s">Allume la nuit, <br><em>pas la planète.</em></h1>
+        <p class="hero__lead" data-reveal style="--d:.9s">Une cire née des plantes, une mèche en coton, un pot qui ne se jette pas. Une lumière douce pour vous, légère pour la Terre.</p>
         <div class="hero__cta" data-reveal style="--d:1.1s">
           <a href="#/boutique" class="btn" data-link>La collection</a>
-          <a href="#/oracle" class="btn btn--ghost" data-link>Tirer une carte</a>
+          <a href="#/nature" class="btn btn--ghost" data-link>Nos engagements</a>
         </div>
       </div>
       <a href="#manifeste" class="scroll-cue" data-scroll aria-label="Défiler"><i></i></a>
     </section>
 
     <section class="section manifesto" id="manifeste">
-      <p class="scrub" data-scrub>Une flamme. Une lune. Et ce silence bleu qui n'appartient qu'à la nuit. Chaque bougie est coulée à la main, dans une cire végétale, pour éclairer doucement ce qui compte.</p>
+      <p class="scrub" data-scrub>Une flamme. Une lune. Et ce silence bleu qui n'appartient qu'à la nuit. Nos bougies naissent des plantes, pas du pétrole : coulées à la main, pour éclairer doucement ce qui compte — sans rien abîmer autour.</p>
+    </section>
+
+    <section class="pledge" id="engagements" style="--n:${PLEDGE.length}">
+      <div class="pledge__stick">
+        <span class="eyebrow pledge__eyebrow">Nos quatre serments</span>
+        <div class="pledge__orb">
+          <svg class="pledge__ring" viewBox="0 0 200 200" aria-hidden="true">
+            <circle cx="100" cy="100" r="96" class="pledge__track"/>
+            <circle cx="100" cy="100" r="96" class="pledge__fill" pathLength="1"/>
+            ${PLEDGE.map((_, i) => { const a = -Math.PI / 2 + i * Math.PI / 2; return `<circle class="pledge__node" data-node="${i}" cx="${(100 + Math.cos(a) * 96).toFixed(2)}" cy="${(100 + Math.sin(a) * 96).toFixed(2)}" r="2.6"/>`; }).join('')}
+          </svg>
+          <div class="pledge__window">
+            ${PLEDGE.map((s, i) => `<img src="${s[3]}" alt="${s[4]}" data-pledge-img="${i}" ${i ? 'loading="lazy"' : ''} class="${i ? '' : 'is-on'}">`).join('')}
+            <span class="pledge__glow" aria-hidden="true"></span>
+          </div>
+        </div>
+        <div class="pledge__texts">
+          ${PLEDGE.map((s, i) => `
+            <article class="pledge__text ${i ? '' : 'is-on'}" data-pledge="${i}">
+              <span class="pledge__num">${s[0]} <i>/</i> IV</span>
+              <h2>${s[1]}</h2>
+              <p>${s[2]}</p>
+            </article>`).join('')}
+        </div>
+        <div class="pledge__phases" aria-hidden="true">${PLEDGE.map((_, i) => `<span data-phase="${i}">${ART.phaseGlyph((i + 1) / 8, { size: 16 })}</span>`).join('')}</div>
+      </div>
+    </section>
+
+    <section class="section stats">
+      <div class="wrap stats__grid">
+        ${STATS.map(([n, u, l], i) => `
+          <div class="stat" data-reveal style="--d:${i * .1}s">
+            <p class="stat__n"><b data-count="${n}">0</b><small>${u}</small></p>
+            <p class="stat__l">${l}</p>
+          </div>`).join('')}
+      </div>
     </section>
 
     <section class="section" id="collection">
@@ -220,36 +279,47 @@
         <div class="section-head section-head--center">
           <span class="eyebrow" data-reveal>La collection</span>
           <h2 data-split>Six lunes, <em>six humeurs.</em></h2>
+          <p class="muted" data-reveal>Des parfums conformes IFRA, une cire végétale, un pot qui ne se jette pas.</p>
         </div>
         <div class="collection">${products.map(astreHTML).join('')}</div>
       </div>
     </section>
 
-    <section class="section" id="rituel">
-      <div class="wrap">
-        <div class="section-head section-head--center">
-          <span class="eyebrow" data-reveal>Le rituel</span>
-          <h2 data-split>Faites <em>simplement.</em></h2>
-        </div>
-        <div class="rite">
-          ${RITUAL.map((s, i) => `
-            <article class="rite__item" data-reveal style="--d:${i * .12}s">
-              <div class="rite__img">${archFrame(s[3], s[4])}</div>
-              <span class="rite__num">${s[0]}</span><h3>${s[1]}</h3><p>${s[2]}</p>
-            </article>`).join('')}
-        </div>
-      </div>
-    </section>
+    <section class="drift" aria-hidden="true">${marquee(1)}${marquee(-1)}</section>
 
     <section class="section offer">
       <div class="offer__img" data-reveal="zoom">${archFrame('assets/img/amb-trio.jpg', 'Trois bougies allumées')}</div>
       <span class="eyebrow" data-reveal>Pour offrir</span>
       <h2 data-split>Le Coffret <em>Phases.</em></h2>
-      <p class="muted" data-reveal>Trois minis, une carte manuscrite. 27 €.</p>
+      <p class="muted" data-reveal>Trois minis, une carte manuscrite, un écrin en carton. 27 €.</p>
       <a href="#/produit/coffret-phases" class="btn" data-link data-reveal>Offrir</a>
+    </section>
+
+    <section class="section campus" id="projet">
+      <div class="campus__seal" data-reveal="zoom">${campusSeal()}</div>
+      <span class="eyebrow" data-reveal>Les coulisses</span>
+      <h2 data-split>Née sur les bancs <em>de l’université.</em></h2>
+      <p data-reveal>SELENE est un projet étudiant, imaginé et conçu à l’<b>Université de Haute-Alsace</b> (UHA). Le nom, les parfums, l’univers, ce site : tout a été pensé avec une seule boussole — faire de belles choses qui respectent la nature.</p>
+      <span class="campus__sign" data-reveal>Projet étudiant · UHA</span>
     </section>`;
 
+  /* Compteurs qui montent en douceur */
+  function countUp(root) {
+    const els = $$('[data-count]', root);
+    const ob = new IntersectionObserver(es => es.forEach(en => {
+      if (!en.isIntersecting) return;
+      ob.unobserve(en.target);
+      const el = en.target, to = +el.dataset.count;
+      if (FX.reduce || !to) { el.textContent = to; return; }
+      const t0 = performance.now(), dur = 2200;
+      const step = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 4); el.textContent = Math.round(to * e); if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }), { threshold: .6 });
+    els.forEach(e => ob.observe(e));
+  }
+
   views.home.after = () => {
+    countUp(app);
     const moon = $('#moon'); let taps = 0, tt;
     moon.addEventListener('click', e => {
       taps++; clearTimeout(tt); tt = setTimeout(() => taps = 0, 1200);
@@ -358,9 +428,11 @@
           </div>
         </div>
       </div>
+      <ul class="eco-chips" data-reveal><li>Cire végétale</li><li>Sans paraffine</li><li>Mèche en coton</li><li>Pot réutilisable</li><li>Colis sans plastique</li></ul>
       <div class="accs" data-reveal>
         <details class="acc"><summary>Conseils d'allumage</summary><p>Laissez brûler 2 h la première fois, jusqu'à ce que toute la surface soit fondue : c'est ce qui évite l'effet « tunnel ». Recoupez la mèche à 5 mm avant chaque allumage, ne laissez jamais une bougie sans surveillance, et éteignez-la avec un éteignoir plutôt qu'en soufflant.</p></details>
         <details class="acc"><summary>Composition</summary><p>Cire de soja et de colza, parfum (conforme IFRA), mèche en coton tressé. Sans paraffine, sans colorant. Pot en verre réutilisable.</p></details>
+        <details class="acc"><summary>Une seconde vie au pot</summary><p>Une fois la bougie terminée, placez le pot une heure au congélateur : la cire restante se détache d'un coup. Un peu d'eau chaude savonneuse, et il devient verre à thé, pot à crayons ou petit vase. Le colis, lui, part au tri avec le papier.</p></details>
         <details class="acc"><summary>Livraison & retours</summary><p>Expédition sous 48 h, livraison offerte dès 35 €. Retours gratuits sous 14 jours pour une bougie jamais allumée. (Prototype : aucune commande réelle n'est expédiée.)</p></details>
       </div>
     </div></section>
@@ -706,13 +778,98 @@
         <div>
           <span class="eyebrow" data-reveal>Chapitre III</span>
           <h2 data-split>Simple, <em>propre</em>, abordable</h2>
-          <p data-reveal>Cire 100 % végétale, mèche en coton, coulée à la main, pot qu'on garde. Et un prix qui ne fait pas peur : une mini à 10 €, une classique entre 16 et 19 €.</p>
+          <p data-reveal>Cire 100 % végétale, mèche en coton, coulée à la main, pot qu'on garde, colis sans plastique. Respecter la nature n'est pas une option : c'est le point de départ. Et un prix qui ne fait pas peur : une mini à 10 €, une classique entre 16 et 19 €.</p>
           <p data-reveal>Parce qu'une belle bougie, ça ne devrait pas être un luxe réservé aux grandes occasions. Un mardi soir, c'est une occasion.</p>
           <a class="btn" href="#/boutique" data-link style="margin-top:14px">Voir la collection</a>
         </div>
       </article>
     </div></section>
     <section class="section" style="padding-top:0">${ART.ornament()}<p class="big-quote" data-split style="margin-top:30px">« Quand la nuit tombe, <em>allumez quelque chose</em> qui vous ressemble. »</p></section>`;
+
+  /* ---------- Nature : nos engagements ---------- */
+  const INSIDE = [
+    ['Cire de soja & colza', 'Végétale, renouvelable, biodégradable.'],
+    ['Mèche en coton tressé', 'Sans plomb, sans âme métallique.'],
+    ['Parfums conformes IFRA', 'Dosés avec soin, jamais en excès.'],
+    ['Verre épais', 'Fait pour durer, puis pour servir encore.']
+  ];
+  const OUTSIDE = [
+    ['Paraffine', 'Ce résidu du pétrole qui fume noir.'],
+    ['Colorants', 'La cire garde sa couleur de lait.'],
+    ['Plastique', 'Ni film, ni calage, ni ruban.'],
+    ['Suremballage', 'Une boîte, un papier. C’est tout.']
+  ];
+  const CYCLE = [
+    ['La plante', 'Soja et colza poussent au soleil.'],
+    ['La cire', 'Fondue doucement, coulée à la main.'],
+    ['La flamme', 'Lente et propre, des dizaines d’heures.'],
+    ['Le pot', 'Lavé, gardé, rempli à nouveau.']
+  ];
+  const TIPS = [
+    ['Deux heures, la première fois', 'Laissez fondre toute la surface : la cire brûle ensuite à plat, sans tunnel ni gaspillage.'],
+    ['La mèche à 5 mm', 'Recoupée avant chaque allumage, elle ne fume pas et la bougie dure plus longtemps.'],
+    ['Une seconde vie au pot', 'Un passage au congélateur, la cire restante se détache. Un peu d’eau chaude : il est neuf.']
+  ];
+  views.nature = () => `
+    <section class="page nature-hero">
+      <div class="nature-hero__orb" data-reveal="zoom" aria-hidden="true"><span></span><span></span><span></span></div>
+      <span class="eyebrow" data-reveal>Nos engagements</span>
+      <h1 data-split>Une lumière douce, <br><em>une empreinte légère.</em></h1>
+      <p class="hero__lead" data-reveal style="--d:.5s">Une bougie ne devrait rien coûter à la forêt, à l’océan ni à l’air que l’on respire. Voici, sans détour, ce que nous mettons dans les nôtres — et ce que nous refusons d’y mettre.</p>
+    </section>
+
+    <section class="section"><div class="wrap">
+      <div class="mirror">
+        <div class="mirror__col mirror__col--in">
+          <h2 data-reveal>Ce qu’il y a <em>dedans</em></h2>
+          ${INSIDE.map(([t, d], i) => `<div class="mirror__item" data-reveal="left" style="--d:${i * .1}s"><b>${t}</b><span>${d}</span></div>`).join('')}
+        </div>
+        <div class="mirror__axis" aria-hidden="true"><i></i>${ART.phaseGlyph(.5, { size: 26 })}<i></i></div>
+        <div class="mirror__col mirror__col--out">
+          <h2 data-reveal>Ce qu’il n’y a <em>pas</em></h2>
+          ${OUTSIDE.map(([t, d], i) => `<div class="mirror__item" data-reveal="right" style="--d:${i * .1}s"><b><s>${t}</s></b><span>${d}</span></div>`).join('')}
+        </div>
+      </div>
+    </div></section>
+
+    <section class="section cycle"><div class="wrap">
+      <div class="section-head section-head--center">
+        <span class="eyebrow" data-reveal>Le cycle</span>
+        <h2 data-split>De la graine <em>au pot.</em></h2>
+        <p class="muted" data-reveal>Une boucle, pas une ligne droite : rien ne finit vraiment à la poubelle.</p>
+      </div>
+      <div class="cycle__wheel" id="cycleWheel" data-reveal="zoom">
+        <svg viewBox="-160 -160 320 320" aria-hidden="true">
+          <circle r="130" class="cycle__track"/>
+          <circle r="130" class="cycle__draw" pathLength="1"/>
+          <circle r="3.2" class="cycle__comet"><animateMotion dur="9s" repeatCount="indefinite" rotate="auto" path="M0 -130 A130 130 0 1 1 0 130 A130 130 0 1 1 0 -130"/></circle>
+        </svg>
+        <div class="cycle__heart"><img src="assets/img/flamme-seule.jpg" alt="Une flamme de bougie dans la nuit" loading="lazy"></div>
+        ${CYCLE.map(([t], i) => `<span class="cycle__node cycle__node--${i}"><i>${['I', 'II', 'III', 'IV'][i]}</i>${t}</span>`).join('')}
+      </div>
+      <div class="cycle__legend">
+        ${CYCLE.map(([t, d], i) => `<div data-reveal style="--d:${i * .1}s"><span>${['I', 'II', 'III', 'IV'][i]}</span><b>${t}</b><p>${d}</p></div>`).join('')}
+      </div>
+    </div></section>
+
+    <section class="section"><div class="wrap">
+      <div class="section-head section-head--center">
+        <span class="eyebrow" data-reveal>Faire durer</span>
+        <h2 data-split>Moins gaspiller, <em>mieux brûler.</em></h2>
+      </div>
+      <div class="tips">
+        ${TIPS.map(([t, d], i) => `<article class="tip" data-reveal style="--d:${i * .12}s">${ART.phaseGlyph([.25, .5, .75][i], { size: 30 })}<h3>${t}</h3><p>${d}</p></article>`).join('')}
+      </div>
+    </div></section>
+
+    <section class="section" style="padding-top:0">
+      ${ART.ornament()}
+      <p class="big-quote" data-split style="margin-top:30px">« La plus belle lumière est celle <em>qui ne laisse rien derrière elle.</em> »</p>
+      <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:44px" data-reveal>
+        <a class="btn" href="#/boutique" data-link>Voir la collection</a>
+        <a class="btn btn--ghost" href="#/histoire" data-link>Notre histoire</a>
+      </div>
+    </section>`;
 
   /* ---------- Crédits ---------- */
   views.credits = () => `
@@ -742,7 +899,8 @@
     let view, arg, anchor;
     switch (parts[0]) {
       case undefined: view = 'home'; break;
-      case 'rituel': view = 'home'; anchor = 'rituel'; break;
+      case 'rituel': view = 'home'; anchor = 'engagements'; break;
+      case 'nature': view = 'nature'; break;
       case 'boutique': view = 'shop'; break;
       case 'produit': view = 'product'; arg = parts[1]; break;
       case 'commande': view = 'checkout'; break;
@@ -758,7 +916,7 @@
     views[view].after && views[view].after(q, arg);
     if (booted) FX.scan(app);
     setupScrollFx();
-    const titles = { home: 'Bougies naturelles coulées à la main', shop: 'Boutique', checkout: 'Commande', thanks: 'Merci', oracle: "L'oracle", story: 'La légende de Séléné', credits: 'Crédits photos', notfound: 'Page introuvable' };
+    const titles = { home: 'Bougies végétales coulées à la main', shop: 'Boutique', checkout: 'Commande', thanks: 'Merci', oracle: "L'oracle", story: 'La légende de Séléné', credits: 'Crédits photos', nature: 'Nos engagements pour la nature', notfound: 'Page introuvable' };
     document.title = 'SELENE — ' + (view === 'product' && byId(arg) ? byId(arg).name : titles[view]);
     $$('.nav__links a').forEach(a => a.classList.toggle('is-active', !!parts[0] && a.getAttribute('href') === '#/' + parts[0]));
     if (anchor) setTimeout(() => { const el = document.getElementById(anchor); if (el) FX.scrollTo(el, { offset: -20 }); }, 200);
@@ -790,14 +948,49 @@
      Scroll : nav, phase, parallaxe, rituel, galerie
      ========================================================= */
   const nav = $('#nav'), phase = $('#phaseShadow');
-  let lastY = 0, parallaxEls = [], ticking = false, heroV = null, heroT = null;
-  function setupScrollFx() { parallaxEls = $$('[data-parallax]', app); heroV = $('#heroVisual'); heroT = $('#heroText'); }
+  let lastY = 0, parallaxEls = [], ticking = false, heroV = null, heroT = null, pledge = null, pledgeIdx = -1, drifts = [], driftX = 0, driftV = 0, driftRaf = 0;
+  function setupScrollFx() {
+    parallaxEls = $$('[data-parallax]', app); heroV = $('#heroVisual'); heroT = $('#heroText');
+    pledge = $('.pledge', app); pledgeIdx = -1;
+    drifts = $$('[data-drift]', app).map(el => ({ el, dir: +el.dataset.drift, track: $('.drift__track', el) }));
+    if (drifts.length && !driftRaf && !FX.reduce) driftRaf = requestAnimationFrame(driftLoop);
+  }
+  /* Bandeau qui dérive, accéléré par la vitesse de défilement */
+  function driftLoop() {
+    driftV *= .92;
+    driftX += .35 + driftV;
+    for (const d of drifts) {
+      if (!d.el.isConnected) continue;
+      const w = d.track.scrollWidth / 2 || 1;
+      const x = ((driftX * d.dir) % w + w) % w;
+      d.track.style.transform = `translate3d(${(-x).toFixed(1)}px,0,0) skewX(${(-Math.max(-8, Math.min(8, driftV * .5)) * d.dir).toFixed(2)}deg)`;
+    }
+    driftRaf = drifts.some(d => d.el.isConnected) ? requestAnimationFrame(driftLoop) : 0;
+  }
+  /* Serments : la section est épinglée, la progression pilote l'anneau, l'image et le texte */
+  function updatePledge() {
+    if (!pledge || !pledge.isConnected) return;
+    const r = pledge.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
+    const n = +getComputedStyle(pledge).getPropertyValue('--n') || 4;
+    pledge.style.setProperty('--p', p.toFixed(4));
+    const i = Math.min(n - 1, Math.floor(p * n * .999 + .0001));
+    if (i === pledgeIdx) return;
+    pledgeIdx = i;
+    $$('[data-pledge]', pledge).forEach(el => el.classList.toggle('is-on', +el.dataset.pledge === i));
+    $$('[data-pledge-img]', pledge).forEach(el => el.classList.toggle('is-on', +el.dataset.pledgeImg === i));
+    $$('[data-phase]', pledge).forEach(el => el.classList.toggle('is-on', +el.dataset.phase <= i));
+    $$('[data-node]', pledge).forEach(el => el.classList.toggle('is-on', +el.dataset.node <= i));
+    FX.pulse(.18, 380);
+  }
   function onScroll() {
     const y = window.scrollY, h = document.documentElement.scrollHeight - innerHeight;
     FX.setScroll(y);
     nav.classList.toggle('is-scrolled', y > 30);
     nav.classList.toggle('is-hidden', y > lastY && y > 400 && !links.classList.contains('is-open'));
+    driftV += Math.max(-40, Math.min(40, (y - lastY) * .12));
     lastY = y;
+    updatePledge();
     phase.setAttribute('cx', (23 + (h > 0 ? Math.min(1, y / h) : 1) * 24).toFixed(2));
     if (heroV) {
       const p = Math.min(1, y / innerHeight);
