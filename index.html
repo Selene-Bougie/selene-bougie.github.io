@@ -84,6 +84,27 @@
     </div>
   </aside>
 
+  <!-- Dock flottant : navigation et panier toujours à portée -->
+  <nav class="dock" id="dock" aria-label="Navigation rapide">
+    <a href="#/boutique" class="dock__item" data-link>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10h8l-.6 9.2a1 1 0 0 1-1 .8H9.6a1 1 0 0 1-1-.8L8 10Z"/><path d="M12 10V7.5"/><path d="M12 7.2c1.3-1.4 1.6-2.7.6-4.2-1.4 1.2-2 2.6-.6 4.2Z"/></svg>
+      <span>Boutique</span>
+    </a>
+    <a href="#/nature" class="dock__item" data-link>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19c0-8 5-13 14-14-.5 9-5.5 14-14 14Z"/><path d="M5 19 13 11"/></svg>
+      <span>Nature</span>
+    </a>
+    <span class="dock__center" id="dockCenter"><a href="#/" class="dock__home" data-link aria-label="Accueil"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3.5a8.5 8.5 0 1 0 7 13 7 7 0 1 1-7-13Z"/></svg></a></span>
+    <a href="#/oracle" class="dock__item" data-link>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c.6 4.5 2.5 6.4 7 7-4.5.6-6.4 2.5-7 7-.6-4.5-2.5-6.4-7-7 4.5-.6 6.4-2.5 7-7Z"/></svg>
+      <span>Oracle</span>
+    </a>
+    <button class="dock__item" id="dockCart" type="button" aria-label="Panier vide">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+      <span>Panier</span><b class="dock__count" id="dockCount">0</b>
+    </button>
+  </nav>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <footer class="footer">

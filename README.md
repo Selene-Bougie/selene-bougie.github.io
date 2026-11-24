@@ -6,7 +6,9 @@ Prototype de boutique en ligne pour **SELENE**, marque de bougies 100 % cire vé
 
 Site statique (HTML/CSS/JS) hébergé sur GitHub Pages : brume animée en WebGL, défilement doux (Lenis), transitions voilées.
 
-- Accueil : quatre « serments » nature en section épinglée, chiffres animés, bandeau qui dérive au défilement
+- Accueil court (≈ 4,5 écrans) : collection en une rangée (à glisser sur mobile), engagements en un seul écran à onglets, chiffres animés
+- Dock flottant : Boutique · Nature · Accueil · Oracle · Panier ; sur une fiche produit, son centre devient « Ajouter · prix »
+- Intro cinématique jouée une fois par visite
 - Page **Nature** : composition (ce qu'il y a dedans / ce qu'il n'y a pas), cycle de la graine au pot, conseils pour faire durer
 - Boutique avec filtres et tri, pages produit, panier persistant (localStorage)
 - Commande avec paiement **simulé** (carte test `4242 4242 4242 4242`, refus simulé avec `4000 0000 0000 0002`)

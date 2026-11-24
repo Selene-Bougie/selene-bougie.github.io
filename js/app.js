@@ -53,6 +53,16 @@
   function openCart() { renderCart(); drawer.classList.add('is-open'); drawer.setAttribute('aria-hidden', 'false'); document.body.classList.add('no-scroll'); FX.lockScroll(true); }
   function closeCart() { drawer.classList.remove('is-open'); drawer.setAttribute('aria-hidden', 'true'); document.body.classList.remove('no-scroll'); FX.lockScroll(false); }
   $('#cartBtn').addEventListener('click', openCart);
+
+  /* ---------- Dock flottant : tout à portée de pouce ---------- */
+  const dock = $('#dock'), dockCenter = $('#dockCenter'), dockHome = dockCenter.innerHTML;
+  function dockReset() { dockCenter.innerHTML = dockHome; dock.classList.remove('has-buy'); }
+  function dockBuy(label, onClick) {
+    dockCenter.innerHTML = '<button class="dock__buy" id="dockBuy"></button>';
+    const b = $('#dockBuy'); b.textContent = label; b.addEventListener('click', onClick);
+    dock.classList.add('has-buy');
+  }
+  $('#dockCart').addEventListener('click', openCart);
   drawer.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeCart(); });
   addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
 
@@ -79,6 +89,8 @@
     const n = cart.count();
     const badge = $('#cartCount');
     badge.textContent = n; badge.classList.toggle('has-items', n > 0);
+    const dc = $('#dockCount'); dc.textContent = n; dc.classList.toggle('has-items', n > 0);
+    $('#dockCart').setAttribute('aria-label', n ? `Panier, ${n} article${n > 1 ? 's' : ''}` : 'Panier vide');
     const body = $('#drawerBody'), foot = $('#drawerFoot');
     if (!cart.items.length) {
       body.innerHTML = `<div class="empty"><div class="moon-mini">${moonPhaseShade(.06)}</div><p>Nouvelle lune : votre panier attend sa première flamme.</p><a href="#/boutique" class="btn btn--small" data-link>Découvrir la collection</a></div>`;
@@ -193,9 +205,6 @@
     [45, 'h', 'de lumière douce'],
     [0, 'g', 'de plastique au colis']
   ];
-  const WORDS = ['Cire végétale', 'Mèche en coton', 'Sans paraffine', 'Verre réutilisable', 'Coulée à la main', 'Zéro plastique'];
-  const marquee = (dir) => `<div class="drift__row" data-drift="${dir}"><div class="drift__track">${[0, 1].map(() => `<span>${WORDS.map(w => `<b>${w}</b><i>✦</i>`).join('')}</span>`).join('')}</div></div>`;
-
   /* Sceau du projet étudiant : texte circulaire autour d'une pousse sous la lune */
   const campusSeal = () => `
     <svg class="seal" viewBox="-120 -120 240 240" aria-hidden="true">
@@ -210,7 +219,12 @@
       </g>
     </svg>`;
 
-  /* ---------- Accueil ---------- */
+  const oathTab = (s, i) => `
+    <button class="oath__tab ${i ? '' : 'is-on'}" role="tab" aria-selected="${!i}" data-oath="${i}">
+      ${ART.phaseGlyph((i + 1) / 8, { size: 18 })}<span><small>${s[0]}</small>${s[1]}</span>
+    </button>`;
+
+  /* ---------- Accueil : court, tout à portée de main ---------- */
   views.home = () => `
     <section class="hero" id="hero">
       <div class="hero__visual" id="heroVisual">
@@ -225,82 +239,63 @@
       <div class="hero__inner" id="heroText">
         <span class="eyebrow" data-reveal style="--d:.5s">Bougies végétales · coulées à la main</span>
         <h1 data-split style="--d:.2s">Allume la nuit, <br><em>pas la planète.</em></h1>
-        <p class="hero__lead" data-reveal style="--d:.9s">Une cire née des plantes, une mèche en coton, un pot qui ne se jette pas. Une lumière douce pour vous, légère pour la Terre.</p>
+        <p class="hero__lead" data-reveal style="--d:.9s">Cire née des plantes, mèche en coton, pot qui ne se jette pas. Dès 10 €, livraison offerte dès 35 €.</p>
         <div class="hero__cta" data-reveal style="--d:1.1s">
-          <a href="#/boutique" class="btn" data-link>La collection</a>
-          <a href="#/nature" class="btn btn--ghost" data-link>Nos engagements</a>
+          <a href="#collection" class="btn" data-scroll>Choisir ma bougie</a>
+          <a href="#engagements" class="btn btn--ghost" data-scroll>Nos engagements</a>
         </div>
       </div>
-      <a href="#manifeste" class="scroll-cue" data-scroll aria-label="Défiler"><i></i></a>
+      <a href="#collection" class="scroll-cue" data-scroll aria-label="Voir la collection"><i></i></a>
     </section>
 
-    <section class="section manifesto" id="manifeste">
-      <p class="scrub" data-scrub>Une flamme. Une lune. Et ce silence bleu qui n'appartient qu'à la nuit. Nos bougies naissent des plantes, pas du pétrole : coulées à la main, pour éclairer doucement ce qui compte — sans rien abîmer autour.</p>
-    </section>
-
-    <section class="pledge" id="engagements" style="--n:${PLEDGE.length}">
-      <div class="pledge__stick">
-        <span class="eyebrow pledge__eyebrow">Nos quatre serments</span>
-        <div class="pledge__orb">
-          <svg class="pledge__ring" viewBox="0 0 200 200" aria-hidden="true">
-            <circle cx="100" cy="100" r="96" class="pledge__track"/>
-            <circle cx="100" cy="100" r="96" class="pledge__fill" pathLength="1"/>
-            ${PLEDGE.map((_, i) => { const a = -Math.PI / 2 + i * Math.PI / 2; return `<circle class="pledge__node" data-node="${i}" cx="${(100 + Math.cos(a) * 96).toFixed(2)}" cy="${(100 + Math.sin(a) * 96).toFixed(2)}" r="2.6"/>`; }).join('')}
-          </svg>
-          <div class="pledge__window">
-            ${PLEDGE.map((s, i) => `<img src="${s[3]}" alt="${s[4]}" data-pledge-img="${i}" ${i ? 'loading="lazy"' : ''} class="${i ? '' : 'is-on'}">`).join('')}
-            <span class="pledge__glow" aria-hidden="true"></span>
-          </div>
-        </div>
-        <div class="pledge__texts">
-          ${PLEDGE.map((s, i) => `
-            <article class="pledge__text ${i ? '' : 'is-on'}" data-pledge="${i}">
-              <span class="pledge__num">${s[0]} <i>/</i> IV</span>
-              <h2>${s[1]}</h2>
-              <p>${s[2]}</p>
-            </article>`).join('')}
-        </div>
-        <div class="pledge__phases" aria-hidden="true">${PLEDGE.map((_, i) => `<span data-phase="${i}">${ART.phaseGlyph((i + 1) / 8, { size: 16 })}</span>`).join('')}</div>
-      </div>
-    </section>
-
-    <section class="section stats">
-      <div class="wrap stats__grid">
-        ${STATS.map(([n, u, l], i) => `
-          <div class="stat" data-reveal style="--d:${i * .1}s">
-            <p class="stat__n"><b data-count="${n}">0</b><small>${u}</small></p>
-            <p class="stat__l">${l}</p>
-          </div>`).join('')}
-      </div>
-    </section>
-
-    <section class="section" id="collection">
+    <section class="section home-shop" id="collection">
       <div class="wrap">
         <div class="section-head section-head--center">
           <span class="eyebrow" data-reveal>La collection</span>
           <h2 data-split>Six lunes, <em>six humeurs.</em></h2>
-          <p class="muted" data-reveal>Des parfums conformes IFRA, une cire végétale, un pot qui ne se jette pas.</p>
         </div>
-        <div class="collection">${products.map(astreHTML).join('')}</div>
+        <div class="collection collection--rail">${products.map(astreHTML).join('')}</div>
+        <p class="rail-hint" aria-hidden="true">Glissez <span>⟷</span></p>
+        <div class="home-shop__more" data-reveal><a href="#/boutique" class="link-arrow" data-link>Toute la boutique <span>→</span></a></div>
       </div>
     </section>
 
-    <section class="drift" aria-hidden="true">${marquee(1)}${marquee(-1)}</section>
-
-    <section class="section offer">
-      <div class="offer__img" data-reveal="zoom">${archFrame('assets/img/amb-trio.jpg', 'Trois bougies allumées')}</div>
-      <span class="eyebrow" data-reveal>Pour offrir</span>
-      <h2 data-split>Le Coffret <em>Phases.</em></h2>
-      <p class="muted" data-reveal>Trois minis, une carte manuscrite, un écrin en carton. 27 €.</p>
-      <a href="#/produit/coffret-phases" class="btn" data-link data-reveal>Offrir</a>
+    <section class="section oath" id="engagements">
+      <div class="section-head section-head--center">
+        <span class="eyebrow" data-reveal>Nos engagements</span>
+        <h2 data-split>Douce pour vous, <em>légère pour la Terre.</em></h2>
+      </div>
+      <div class="oath__stage" data-reveal>
+        <div class="oath__tabs oath__tabs--l" role="tablist" aria-label="Nos engagements">${PLEDGE.slice(0, 2).map((s, i) => oathTab(s, i)).join('')}</div>
+        <div class="oath__center">
+          <div class="oath__orb">
+            <svg class="oath__ring" viewBox="0 0 200 200" aria-hidden="true">
+              <circle cx="100" cy="100" r="96" class="oath__track"/>
+              <circle cx="100" cy="100" r="96" class="oath__fill" pathLength="1"/>
+            </svg>
+            <div class="oath__window">
+              ${PLEDGE.map((s, i) => `<img src="${s[3]}" alt="${s[4]}" data-oath-img="${i}" loading="lazy" class="${i ? '' : 'is-on'}">`).join('')}
+            </div>
+          </div>
+          <div class="oath__texts" aria-live="polite">
+            ${PLEDGE.map((s, i) => `<p class="oath__text ${i ? '' : 'is-on'}" data-oath-text="${i}"><b>${s[1]}</b>${s[2]}</p>`).join('')}
+          </div>
+        </div>
+        <div class="oath__tabs oath__tabs--r" role="tablist" aria-label="Nos engagements (suite)">${PLEDGE.slice(2).map((s, i) => oathTab(s, i + 2)).join('')}</div>
+      </div>
+      <div class="oath__stats">
+        ${STATS.map(([n, u, l]) => `<div class="stat"><p class="stat__n"><b data-count="${n}">0</b><small>${u}</small></p><p class="stat__l">${l}</p></div>`).join('')}
+      </div>
+      <div class="home-shop__more" data-reveal><a href="#/nature" class="link-arrow" data-link>Tout savoir sur nos bougies <span>→</span></a></div>
     </section>
 
-    <section class="section campus" id="projet">
+    <section class="section campus campus--slim" id="projet">
       <div class="campus__seal" data-reveal="zoom">${campusSeal()}</div>
-      <span class="eyebrow" data-reveal>Les coulisses</span>
-      <h2 data-split>Née sur les bancs <em>de l’université.</em></h2>
-      <p data-reveal>SELENE est un projet étudiant, imaginé et conçu à l’<b>Université de Haute-Alsace</b> (UHA). Le nom, les parfums, l’univers, ce site : tout a été pensé avec une seule boussole — faire de belles choses qui respectent la nature.</p>
-      <span class="campus__sign" data-reveal>Projet étudiant · UHA</span>
+      <div class="campus__body">
+        <span class="eyebrow" data-reveal>Les coulisses</span>
+        <h2 data-split>Née sur les bancs <em>de l’université.</em></h2>
+        <p data-reveal>SELENE est un projet étudiant, imaginé et conçu à l’<b>Université de Haute-Alsace</b> (UHA), avec une seule boussole : faire de belles choses qui respectent la nature.</p>
+      </div>
     </section>`;
 
   /* Compteurs qui montent en douceur */
@@ -318,8 +313,36 @@
     els.forEach(e => ob.observe(e));
   }
 
+  /* Engagements : un seul écran, onglets + défilement automatique doux */
+  let oathTimer = 0;
+  function oath(root) {
+    const stage = root.querySelector('.oath'); if (!stage) return;
+    const tabs = [...stage.querySelectorAll('[data-oath]')], n = tabs.length;
+    let cur = 0, visible = false, paused = false;
+    const show = (i, user) => {
+      cur = (i + n) % n;
+      tabs.forEach(t => { const on = +t.dataset.oath === cur; t.classList.toggle('is-on', on); t.setAttribute('aria-selected', on); });
+      stage.querySelectorAll('[data-oath-img]').forEach(el => el.classList.toggle('is-on', +el.dataset.oathImg === cur));
+      stage.querySelectorAll('[data-oath-text]').forEach(el => el.classList.toggle('is-on', +el.dataset.oathText === cur));
+      const ring = stage.querySelector('.oath__ring'); ring.classList.remove('is-run'); void ring.getBoundingClientRect(); ring.classList.add('is-run');
+      if (user) FX.pulse(.2, 400);
+      arm();
+    };
+    const arm = () => {
+      clearTimeout(oathTimer);
+      if (FX.reduce || !visible || paused || !stage.isConnected) return;
+      oathTimer = setTimeout(() => show(cur + 1), 6000);
+    };
+    tabs.forEach(t => t.addEventListener('click', () => show(+t.dataset.oath, true)));
+    const st = stage.querySelector('.oath__stage');
+    st.addEventListener('pointerenter', () => { paused = true; stage.classList.add('is-paused'); clearTimeout(oathTimer); });
+    st.addEventListener('pointerleave', () => { paused = false; stage.classList.remove('is-paused'); show(cur); });
+    new IntersectionObserver(es => es.forEach(en => { visible = en.isIntersecting; if (visible) show(cur); else clearTimeout(oathTimer); }), { threshold: .35 }).observe(stage);
+  }
+
   views.home.after = () => {
     countUp(app);
+    oath(app);
     const moon = $('#moon'); let taps = 0, tt;
     moon.addEventListener('click', e => {
       taps++; clearTimeout(tt); tt = setTimeout(() => taps = 0, 1200);
@@ -445,7 +468,8 @@
     const p = byId(id); if (!p) return;
     let size = defSize(p), qty = 1;
     const price = $('#pdpPrice'), qv = $('#qVal');
-    const update = () => { price.textContent = euro(p.sizes[size] * qty); qv.textContent = qty; };
+    const update = () => { price.textContent = euro(p.sizes[size] * qty); qv.textContent = qty; const db = $('#dockBuy'); if (db) db.textContent = 'Ajouter · ' + euro(p.sizes[size] * qty); };
+    dockBuy('Ajouter · ' + euro(p.sizes[size]), e => addToCart(p.id, size, qty, e.currentTarget));
     $$('[data-size-pick]').forEach(b => b.addEventListener('click', () => {
       size = b.dataset.sizePick;
       $$('[data-size-pick]').forEach(x => x.classList.toggle('is-on', x === b));
@@ -910,6 +934,8 @@
       case 'credits': view = 'credits'; break;
       default: view = 'notfound';
     }
+    dockReset();
+    dock.classList.toggle('is-away', view === 'checkout' || view === 'thanks');
     app.innerHTML = views[view](q, arg);
     app.dataset.view = view;
     FX.scrollTo(0, { immediate: true });
@@ -918,7 +944,7 @@
     setupScrollFx();
     const titles = { home: 'Bougies végétales coulées à la main', shop: 'Boutique', checkout: 'Commande', thanks: 'Merci', oracle: "L'oracle", story: 'La légende de Séléné', credits: 'Crédits photos', nature: 'Nos engagements pour la nature', notfound: 'Page introuvable' };
     document.title = 'SELENE — ' + (view === 'product' && byId(arg) ? byId(arg).name : titles[view]);
-    $$('.nav__links a').forEach(a => a.classList.toggle('is-active', !!parts[0] && a.getAttribute('href') === '#/' + parts[0]));
+    $$('.nav__links a, .dock a').forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#/' + (parts[0] || '')));
     if (anchor) setTimeout(() => { const el = document.getElementById(anchor); if (el) FX.scrollTo(el, { offset: -20 }); }, 200);
     onScroll();
   }
@@ -948,49 +974,15 @@
      Scroll : nav, phase, parallaxe, rituel, galerie
      ========================================================= */
   const nav = $('#nav'), phase = $('#phaseShadow');
-  let lastY = 0, parallaxEls = [], ticking = false, heroV = null, heroT = null, pledge = null, pledgeIdx = -1, drifts = [], driftX = 0, driftV = 0, driftRaf = 0;
-  function setupScrollFx() {
-    parallaxEls = $$('[data-parallax]', app); heroV = $('#heroVisual'); heroT = $('#heroText');
-    pledge = $('.pledge', app); pledgeIdx = -1;
-    drifts = $$('[data-drift]', app).map(el => ({ el, dir: +el.dataset.drift, track: $('.drift__track', el) }));
-    if (drifts.length && !driftRaf && !FX.reduce) driftRaf = requestAnimationFrame(driftLoop);
-  }
-  /* Bandeau qui dérive, accéléré par la vitesse de défilement */
-  function driftLoop() {
-    driftV *= .92;
-    driftX += .35 + driftV;
-    for (const d of drifts) {
-      if (!d.el.isConnected) continue;
-      const w = d.track.scrollWidth / 2 || 1;
-      const x = ((driftX * d.dir) % w + w) % w;
-      d.track.style.transform = `translate3d(${(-x).toFixed(1)}px,0,0) skewX(${(-Math.max(-8, Math.min(8, driftV * .5)) * d.dir).toFixed(2)}deg)`;
-    }
-    driftRaf = drifts.some(d => d.el.isConnected) ? requestAnimationFrame(driftLoop) : 0;
-  }
-  /* Serments : la section est épinglée, la progression pilote l'anneau, l'image et le texte */
-  function updatePledge() {
-    if (!pledge || !pledge.isConnected) return;
-    const r = pledge.getBoundingClientRect();
-    const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
-    const n = +getComputedStyle(pledge).getPropertyValue('--n') || 4;
-    pledge.style.setProperty('--p', p.toFixed(4));
-    const i = Math.min(n - 1, Math.floor(p * n * .999 + .0001));
-    if (i === pledgeIdx) return;
-    pledgeIdx = i;
-    $$('[data-pledge]', pledge).forEach(el => el.classList.toggle('is-on', +el.dataset.pledge === i));
-    $$('[data-pledge-img]', pledge).forEach(el => el.classList.toggle('is-on', +el.dataset.pledgeImg === i));
-    $$('[data-phase]', pledge).forEach(el => el.classList.toggle('is-on', +el.dataset.phase <= i));
-    $$('[data-node]', pledge).forEach(el => el.classList.toggle('is-on', +el.dataset.node <= i));
-    FX.pulse(.18, 380);
-  }
+  let lastY = 0, parallaxEls = [], ticking = false, heroV = null, heroT = null;
+  function setupScrollFx() { parallaxEls = $$('[data-parallax]', app); heroV = $('#heroVisual'); heroT = $('#heroText'); }
   function onScroll() {
     const y = window.scrollY, h = document.documentElement.scrollHeight - innerHeight;
     FX.setScroll(y);
     nav.classList.toggle('is-scrolled', y > 30);
     nav.classList.toggle('is-hidden', y > lastY && y > 400 && !links.classList.contains('is-open'));
-    driftV += Math.max(-40, Math.min(40, (y - lastY) * .12));
+    dock.classList.toggle('is-up', y > 240 || !app.dataset.view || app.dataset.view !== 'home');
     lastY = y;
-    updatePledge();
     phase.setAttribute('cx', (23 + (h > 0 ? Math.min(1, y / h) : 1) * 24).toFixed(2));
     if (heroV) {
       const p = Math.min(1, y / innerHeight);
@@ -1031,5 +1023,7 @@
     setTimeout(() => loader.remove(), 1400);
   };
   loader.addEventListener('click', hide);
-  if (FX.reduce) hide(); else setTimeout(hide, 3300);
+  let seen = false;
+  try { seen = sessionStorage.getItem('selene-intro') === '1'; sessionStorage.setItem('selene-intro', '1'); } catch { /* stockage indisponible */ }
+  if (FX.reduce || seen) { loader.style.transition = 'opacity .5s'; hide(); } else setTimeout(hide, 3300);
 })();
